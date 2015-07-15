@@ -1,0 +1,396 @@
+---
+title: "Data Science Specialization - 8.PML - Final Project"
+author: "jmvilaverde"
+date: "Monday, July 13, 2015"
+output: html_document
+---
+
+## Background
+
+Using devices such as Jawbone Up, Nike FuelBand, and Fitbit it is now possible to collect a large amount of data about personal activity relatively inexpensively. These type of devices are part of the quantified self movement – a group of enthusiasts who take measurements about themselves regularly to improve their health, to find patterns in their behavior, or because they are tech geeks. One thing that people regularly do is quantify how much of a particular activity they do, but they rarely quantify how well they do it. In this project, your goal will be to use data from accelerometers on the belt, forearm, arm, and dumbell of 6 participants. They were asked to perform barbell lifts correctly and incorrectly in 5 different ways. More information is available from the website here: http://groupware.les.inf.puc-rio.br/har (see the section on the Weight Lifting Exercise Dataset). 
+
+##What you should submit
+
+### You should create a report describing how you built your model, 
+
+First of all, data is extracted from web
+
+##Data Extract, Transform and Load
+
+
+* The training data for this project are available here: https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv
+
+* The test data are available here: https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv
+
+```{r extract, echo=TRUE, cache=TRUE}
+###############
+#Extract files and data#
+###############
+
+initValues <- function(){
+        
+        #Set URL path
+        URLTraining <<- "https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv"
+        URLTesting <<- "https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv"
+
+        #Set csv name
+        fileTraining <<- "training.csv"
+        fileTesting <<- "testing.csv"
+}
+
+extractData <- function(){
+        
+        initValues()
+        setInternet2(use = TRUE)
+
+        #Adquire training file
+        if (!file.exists(fileTraining)) download.file(URLTraining, fileTraining)
+        trainingData <<- read.csv(fileTraining)
+        
+        #Adquire testing file
+        if (!file.exists(fileTesting)) download.file(URLTesting, fileTesting)
+        testingData <<- read.csv(fileTesting)
+
+}
+
+extractData()
+
+# names(trainingData)
+# str(trainingData)
+# summary(trainingData)
+
+
+```
+
+
+
+## Initial Data analysis
+
+Based on information extracted from:
+
+> (http://groupware.les.inf.puc-rio.br/har#weight_lifting_exercises)
+
+> Please, cite this paper to refer the WLE dataset
+
+> Velloso, E.; Bulling, A.; Gellersen, H.; Ugulino, W.; Fuks, H. Qualitative Activity Recognition of Weight Lifting Exercises. Proceedings of 4th International Conference in Cooperation with SIGCHI (Augmented Human '13) . Stuttgart, Germany: ACM SIGCHI, 2013.
+
+> Read more: (http://groupware.les.inf.puc-rio.br/har#weight_lifting_exercises#ixzz3fnKRBc4a)
+
+The objective of this data is to define quality of execution.
+
+The data into classe variable is a factor with these 5-type:
+
+Six young health participants (`r unique(trainingData$user_name)`)  were asked to perform one set of 10 repetitions of the Unilateral Dumbbell Biceps Curl in five different fashion:
+
+Factor | Classification                         | Type
+------ | -------------------------------------- | -----------
+A      | exactly according to the specification | Correct
+B      | throwing the elbows to the front       | Mistake
+C      | lifting the dumbbell only halfway      | Mistake
+D      | lowering the dumbbell only halfway     | Mistake
+E      | throwing the hips to the front         | Mistake
+
+There is a total of `r ncols(trainingData)-1` variables as predictors. 
+
+All available predictors:
+
+`r names(trainingData)`
+
+Data collects information from 4 sensors (belt, arm, dumbbell, forearm), each sensor has 3 detectors (acceleration, gyroscope and magnetometer) and each detector has 3 axis (x, y, z), that makes a total of 36 variables. Other sensors predictors are derivated from these predictors.
+
+For our analysis model are relevant:
+
+`r colnames(trainingData[,grep("_x$|_y$|_z$|classe", colnames(trainingData))])`
+
+Also, exists a user_name predictor, that indicates who is the user, including this predictor increase the prediction accuracy when the user has participated on training.
+
+user_name
+
+colnames(trainingData)
+Other relevant predictor is $new_window$ (indicates start of repetition) and $num_window$ (indentificates a repetition)
+
+`r colnames(trainingData[,grep("window$", colnames(trainingData))])`
+
+Position over time may be relevant, can be interesting to include timestamp predictors:
+
+`r colnames(trainingData[,grep("timestamp", colnames(trainingData))])`
+
+Are proposed two model options based on these premises:
+
+* It's presumed that sensors are basic to prediction.
+* Because the prediction is about users that participates on training, include user_name as predictor have to improve accuracy.
+* When starts repetition new_window and which repetition is num_window can be relevant to prediction.
+* Timestamp predictors can be considered over final model to see the effect of it.
+
+### 1. Model sensors and user name: 36 predictors (_X, _y, _Z) + user_name.
+
+For combined model is used a Random Forest model that is a combination of LDA, Booting and Random Forest model's predictions.
+
+
+Using trainingData create a 60% training set, 20% testing set and 20% validating set.
+
+```{r modelSensorsUserDataSet}
+#Based on training data create training sets and test sets
+require(caret)
+require(kernlab)
+require(pROC) #varImp()
+
+#Create a model only using x y z axis and classe
+set.seed(1525)
+
+Dataset <- trainingData[,grep("_x$|_y$|_z$|user|classe", colnames(trainingData))]
+
+inBuild <- createDataPartition(y=Dataset$classe, p=0.8, list=FALSE)
+validation <- Dataset[-inBuild,]
+
+buildData <- Dataset[inBuild,]
+
+inTrain <- createDataPartition(y=buildData$classe, p=0.75, list=FALSE)
+trainingSet <- buildData[inTrain,]
+testingSet <- buildData[-inTrain,]
+
+
+dim(trainingSet)
+dim(testingSet)
+dim(validation)
+```
+
+Use a LDA Model: Linear discriminant analysis
+
+```{r modelLDASensorsUser}
+require(MASS)
+modelLDA <- train(classe ~ ., data = trainingSet, method="lda")
+save(modelLDA, file="models/modelLDA.rda")
+load("models/modelLDA.rda")
+predictedLDA <- predict(modelLDA, testingSet)
+confusionMatrix(predictedLDA, testingSet$classe)
+#Accuracy : 0.6628 Kappa : 0.5721
+predictedLDAv <- predict(modelLDA, validation)
+confusionMatrix(predictedLDAv, validation$classe)
+#Accuracy : 0.6538 Kappa : 0.5605
+```
+ 
+Use a GBM model: Gradient Boosting Machine
+
+```{r modelGBMSensorsUser}
+require(gbm)
+modelGBM <- train(classe ~ ., data = trainingSet, method="gbm")
+save(modelGBM, file="models/modelGBM.rda")
+load("models/modelGBM.rda")
+varImp(modelGBM)
+predictedGBM <- predict(modelGBM, testingSet)
+confusionMatrix(predictedGBM, testingSet$classe)
+#Consumes a lot of computing time +- 15 minutos
+#Accuracy : 0.9123 Kappa : 0.8889
+predictedGBMv <- predict(modelGBM, validation)
+confusionMatrix(predictedGBMv, validation$classe)
+#Accuracy : 0.9039 Kappa : 0.8782
+```
+
+Use a RF model: Random Forest.
+
+```{r modelRFSensorsUser}
+require(randomForest)
+modelRF <- train(classe ~ ., data = trainingSet, method="rf", do.trace=10, ntree=100)
+save(modelRF, file="models/modelRF.rda")
+load("models/modelRF.rda")
+predictedRF <- predict(modelRF, testingSet)
+confusionMatrix(predictedRF, testingSet$classe)
+#Consumes a lot of computing time 6 minutes
+#Accuracy : 0.9801 Kappa : 0.9748 Mcnemar's Test P-Value : NA
+predictedRFv <- predict(modelRF, validation)
+confusionMatrix(predictedRFv, validation$classe)
+# Accuracy : 0.9809 Kappa : 0.9758 Mcnemar's Test P-Value : NA
+``` 
+
+Combined model: Random forest from other model's predictions
+
+```{r modelCombined}
+#Model combined
+predCompDF <- data.frame(predictedLDA, predictedGBM, predictedRF, y=testingSet$classe)
+combMod <- train(y ~ ., data = predCompDF, method="rf", do.trace=10, ntree=100)
+save("combMod", file="models/combMod.rda")
+load("models/combMod.rda")
+#Time to predict:
+combPred <- predict(combMod, testingSet)
+confusionMatrix(combPred, testingSet$classe)
+#Accuracy : 0.9801 Kappa : 0.9748
+combPredv <- predict(combMod, validation)
+confusionMatrix(combPredv, validation$classe)
+#Accuracy : 0.9801 Kappa : 0.9748
+
+#Prediction of testingData Set to upload as result
+tpredictedLDA <- predict(modelLDA, testingData)
+tpredictedGBM <- predict(modelGBM, testingData)
+tpredictedRF <- predict(modelRF, testingData)
+
+newdataset <- data.frame(tpredictedLDA, tpredictedGBM, tpredictedRF)
+colnames(newdataset) <- colnames(predCompDF[,1:3])
+
+tpredictedComb <- predict(combMod, newdata = newdataset)
+
+result <- rbind(seq(1:20), as.character(tpredictedLDA), as.character(tpredictedGBM), as.character(tpredictedRF), as.character(tpredictedComb))
+
+```
+
+Estimated accuracy and Kappa with this predictors (taking lower value between testing and validating):
+
+Model | Accuracy | Kappa  | Time to process
+----- | -------- | ------ | ---------
+LDA   | 0.6538   | 0.5605 | 
+GBM   | 0.9039   | 0.8782 | 15 minutes
+RF    | 0.9801   | 0.9748 | 15 minutes
+Comb  | 0.9801   | 0.9748 | 
+
+Prediction for testing set: `r tpredictedComb #B A B A A E D B A A B C B A E E A B B B`
+
+### 2. Model sensors + user_name + window
+
+For combined model is used a Random Forest model that is a combination of LDA, Booting and Random Forest model's predictions.
+
+Using trainingData create a 60% training set, 20% testing set and 20% validating set.
+
+```{r modelSensorsUserWindowDataSet}
+
+#Based on training data create training sets and test sets
+require(caret)
+require(kernlab)
+require(pROC) #varImp()
+
+#Create a model only using x y z axis and user_name, window, classe
+set.seed(1525)
+
+Dataset2 <- trainingData[,grep("_x$|_y$|_z$|classe|user|window", colnames(trainingData))]
+
+inBuild2 <- createDataPartition(y=Dataset2$classe, p=0.8, list=FALSE)
+validation2 <- Dataset2[-inBuild2,]
+
+buildData2 <- Dataset2[inBuild2,]
+
+inTrain2 <- createDataPartition(y=buildData2$classe, p=0.75, list=FALSE)
+trainingSet2 <- buildData2[inTrain2,]
+testingSet2 <- buildData2[-inTrain2,]
+
+
+dim(trainingSet2)
+dim(testingSet2)
+dim(validation2)
+```
+
+```{r modelLDASensorsUserWindow}
+#Model LDA
+require(MASS)
+modelLDA2 <- train(classe ~ ., data = trainingSet2, method="lda")
+save(modelLDA2, file="models/modelLDA2.rda")
+load("models/modelLDA2.rda")
+
+predictedLDA2 <- predict(modelLDA2, testingSet2)
+confusionMatrix(predictedLDA2, testingSet2$classe)
+#Accuracy : 0.6763 Low
+predictedLDA2v <- predict(modelLDA2, validation2)
+confusionMatrix(predictedLDA2v, validation2$classe)
+#Accuracy : 0.6663 
+```
+
+```{r modelGBMSensorsUserWindow}
+#Third model GBM
+require(gbm)
+Sys.time()
+modelGBM2 <- train(classe ~ ., data = trainingSet2, method="gbm")
+Sys.time()
+save(modelGBM2, file="models/modelGBM2.rda")
+load("models/modelGBM2.rda")
+
+predictedGBM2 <- predict(modelGBM2, testingSet2)
+confusionMatrix(predictedGBM2, testingSet2$classe)
+#Consumes a lot of computing time 20:00 - 20:16
+#Accuracy : 0.9913
+predictedGBM2v <- predict(modelGBM2, validation2)
+confusionMatrix(predictedGBM2v, validation2$classe)
+#Accuracy : 0.9864 
+```
+
+```{r modelRFSensorsUserWindow}
+#Model Random Forest
+require(randomForest)
+Sys.time()
+modelRF2 <- train(classe ~ ., data = trainingSet2, method="rf", do.trace=10, ntree=100)
+Sys.time()
+save(modelRF2, file="models/modelRF2.rda")
+load("models/modelRF2.rda")
+
+predictedRF2 <- predict(modelRF2, testingSet2)
+confusionMatrix(predictedRF2, testingSet2$classe)
+#Consumes a lot of computing time 20:17 - 20:24
+#Accuracy : 0.9964
+predictedRF2v <- predict(modelRF2, validation2)
+confusionMatrix(predictedRF2v, validation2$classe)
+#Accuracy : 0.9969
+```
+
+```{r modelCombSensorsUserWindow}
+#Model combined
+predCompDF2 <- data.frame(predictedLDA2, predictedGBM2, predictedRF2, classe=testingSet2$classe)
+combMod2 <- train(classe ~ ., data = predCompDF2, method="rf", do.trace=10, ntree=100)
+save(combMod2, file="models/combMod2.rda")
+load("models/combMod2.rda")
+#Time to predict:
+combPred2 <- predict(combMod2, testingSet2)
+confusionMatrix(combPred2, testingSet2$classe)
+# Accuracy : 0.9968
+validationDataComb <- data.frame(predictedLDA2v, predictedGBM2v, predictedRF2v, y=validation2$classe)
+colnames(validationDataComb) <- colnames(predCompDF2)
+combPred2v <- predict(combMod2, validationDataComb)
+confusionMatrix(combPred2v, validationDataComb$classe)
+#Accuracy : 0.9964
+
+#Prediction of testingData Set to upload as result
+tpredictedLDA2 <- predict(modelLDA2, testingData)
+tpredictedGBM2 <- predict(modelGBM2, testingData)
+tpredictedRF2 <- predict(modelRF2, testingData)
+
+newdataset2 <- data.frame(tpredictedLDA2, tpredictedGBM2, tpredictedRF2)
+colnames(newdataset2) <- colnames(predCompDF2[,1:3])
+
+tpredictedComb2 <- predict(combMod2, newdata = newdataset2)
+
+result2 <- cbind(seq(1:20), as.character(tpredictedLDA2), as.character(tpredictedGBM2), as.character(tpredictedRF2), as.character(tpredictedComb2))
+
+result1
+result2
+```
+
+
+
+
+
+
+```{r submit}
+pml_write_files = function(x){
+  n = length(x)
+  for(i in 1:n){
+    filename = paste0("problem_id_",i,".txt")
+    write.table(x[i],file=filename,quote=FALSE,row.names=FALSE,col.names=FALSE)
+  }
+}
+
+pml_write_files(tpredictedComb2)
+
+
+```
+
+
+
+### how you used cross validation, 
+
+### what you think the expected out of sample error is, 
+
+### and why you made the choices you did. 
+
+
+### You will also use your prediction model to predict 20 different test cases. 
+
+> 1. Your submission should consist of a link to a Github repo with your R markdown and compiled HTML file describing your analysis. Please constrain the text of the writeup to < 2000 words and the number of figures to be less than 5. It will make it easier for the graders if you submit a repo with a gh-pages branch so the HTML page can be viewed online (and you always want to make it easy on graders :-).
+
+
+
