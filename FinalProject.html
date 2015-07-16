@@ -69,785 +69,726 @@ img {
 
 <div id="background" class="section level2">
 <h2>Background</h2>
-<p>Using devices such as Jawbone Up, Nike FuelBand, and Fitbit it is now possible to collect a large amount of data about personal activity relatively inexpensively. These type of devices are part of the quantified self movement – a group of enthusiasts who take measurements about themselves regularly to improve their health, to find patterns in their behavior, or because they are tech geeks. One thing that people regularly do is quantify how much of a particular activity they do, but they rarely quantify how well they do it. In this project, your goal will be to use data from accelerometers on the belt, forearm, arm, and dumbell of 6 participants. They were asked to perform barbell lifts correctly and incorrectly in 5 different ways. More information is available from the website here: <a href="http://groupware.les.inf.puc-rio.br/har" class="uri">http://groupware.les.inf.puc-rio.br/har</a> (see the section on the Weight Lifting Exercise Dataset).</p>
+<p>Using devices such as Jawbone Up, Nike FuelBand, and Fitbit it is now possible to collect a large amount of data about personal activity relatively inexpensively. These type of devices are part of the quantified self movement – a group of enthusiasts who take measurements about themselves regularly to improve their health, to find patterns in their behavior, or because they are tech geeks. One thing that people regularly do is quantify how much of a particular activity they do, but they rarely quantify how well they do it. In this project, your goal will be to use data from accelerometers on the belt, forearm, arm, and dumbell of 6 participants. They were asked to perform barbell lifts correctly and incorrectly in 5 different ways.</p>
+<p>More information is available from the website here: <a href="http://groupware.les.inf.puc-rio.br/har" class="uri">http://groupware.les.inf.puc-rio.br/har</a> (see the section on the Weight Lifting Exercise Dataset).</p>
+<hr />
 </div>
-<div id="data" class="section level2">
-<h2>Data</h2>
-<p>The training data for this project are available here:</p>
-<p><a href="https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv" class="uri">https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv</a></p>
-<p>The test data are available here:</p>
-<p><a href="https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv" class="uri">https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv</a></p>
-<pre><code>## [1] &quot;data.frame&quot;</code></pre>
-<pre><code>##   [1] &quot;X&quot;                        &quot;user_name&quot;               
-##   [3] &quot;raw_timestamp_part_1&quot;     &quot;raw_timestamp_part_2&quot;    
-##   [5] &quot;cvtd_timestamp&quot;           &quot;new_window&quot;              
-##   [7] &quot;num_window&quot;               &quot;roll_belt&quot;               
-##   [9] &quot;pitch_belt&quot;               &quot;yaw_belt&quot;                
-##  [11] &quot;total_accel_belt&quot;         &quot;kurtosis_roll_belt&quot;      
-##  [13] &quot;kurtosis_picth_belt&quot;      &quot;kurtosis_yaw_belt&quot;       
-##  [15] &quot;skewness_roll_belt&quot;       &quot;skewness_roll_belt.1&quot;    
-##  [17] &quot;skewness_yaw_belt&quot;        &quot;max_roll_belt&quot;           
-##  [19] &quot;max_picth_belt&quot;           &quot;max_yaw_belt&quot;            
-##  [21] &quot;min_roll_belt&quot;            &quot;min_pitch_belt&quot;          
-##  [23] &quot;min_yaw_belt&quot;             &quot;amplitude_roll_belt&quot;     
-##  [25] &quot;amplitude_pitch_belt&quot;     &quot;amplitude_yaw_belt&quot;      
-##  [27] &quot;var_total_accel_belt&quot;     &quot;avg_roll_belt&quot;           
-##  [29] &quot;stddev_roll_belt&quot;         &quot;var_roll_belt&quot;           
-##  [31] &quot;avg_pitch_belt&quot;           &quot;stddev_pitch_belt&quot;       
-##  [33] &quot;var_pitch_belt&quot;           &quot;avg_yaw_belt&quot;            
-##  [35] &quot;stddev_yaw_belt&quot;          &quot;var_yaw_belt&quot;            
-##  [37] &quot;gyros_belt_x&quot;             &quot;gyros_belt_y&quot;            
-##  [39] &quot;gyros_belt_z&quot;             &quot;accel_belt_x&quot;            
-##  [41] &quot;accel_belt_y&quot;             &quot;accel_belt_z&quot;            
-##  [43] &quot;magnet_belt_x&quot;            &quot;magnet_belt_y&quot;           
-##  [45] &quot;magnet_belt_z&quot;            &quot;roll_arm&quot;                
-##  [47] &quot;pitch_arm&quot;                &quot;yaw_arm&quot;                 
-##  [49] &quot;total_accel_arm&quot;          &quot;var_accel_arm&quot;           
-##  [51] &quot;avg_roll_arm&quot;             &quot;stddev_roll_arm&quot;         
-##  [53] &quot;var_roll_arm&quot;             &quot;avg_pitch_arm&quot;           
-##  [55] &quot;stddev_pitch_arm&quot;         &quot;var_pitch_arm&quot;           
-##  [57] &quot;avg_yaw_arm&quot;              &quot;stddev_yaw_arm&quot;          
-##  [59] &quot;var_yaw_arm&quot;              &quot;gyros_arm_x&quot;             
-##  [61] &quot;gyros_arm_y&quot;              &quot;gyros_arm_z&quot;             
-##  [63] &quot;accel_arm_x&quot;              &quot;accel_arm_y&quot;             
-##  [65] &quot;accel_arm_z&quot;              &quot;magnet_arm_x&quot;            
-##  [67] &quot;magnet_arm_y&quot;             &quot;magnet_arm_z&quot;            
-##  [69] &quot;kurtosis_roll_arm&quot;        &quot;kurtosis_picth_arm&quot;      
-##  [71] &quot;kurtosis_yaw_arm&quot;         &quot;skewness_roll_arm&quot;       
-##  [73] &quot;skewness_pitch_arm&quot;       &quot;skewness_yaw_arm&quot;        
-##  [75] &quot;max_roll_arm&quot;             &quot;max_picth_arm&quot;           
-##  [77] &quot;max_yaw_arm&quot;              &quot;min_roll_arm&quot;            
-##  [79] &quot;min_pitch_arm&quot;            &quot;min_yaw_arm&quot;             
-##  [81] &quot;amplitude_roll_arm&quot;       &quot;amplitude_pitch_arm&quot;     
-##  [83] &quot;amplitude_yaw_arm&quot;        &quot;roll_dumbbell&quot;           
-##  [85] &quot;pitch_dumbbell&quot;           &quot;yaw_dumbbell&quot;            
-##  [87] &quot;kurtosis_roll_dumbbell&quot;   &quot;kurtosis_picth_dumbbell&quot; 
-##  [89] &quot;kurtosis_yaw_dumbbell&quot;    &quot;skewness_roll_dumbbell&quot;  
-##  [91] &quot;skewness_pitch_dumbbell&quot;  &quot;skewness_yaw_dumbbell&quot;   
-##  [93] &quot;max_roll_dumbbell&quot;        &quot;max_picth_dumbbell&quot;      
-##  [95] &quot;max_yaw_dumbbell&quot;         &quot;min_roll_dumbbell&quot;       
-##  [97] &quot;min_pitch_dumbbell&quot;       &quot;min_yaw_dumbbell&quot;        
-##  [99] &quot;amplitude_roll_dumbbell&quot;  &quot;amplitude_pitch_dumbbell&quot;
-## [101] &quot;amplitude_yaw_dumbbell&quot;   &quot;total_accel_dumbbell&quot;    
-## [103] &quot;var_accel_dumbbell&quot;       &quot;avg_roll_dumbbell&quot;       
-## [105] &quot;stddev_roll_dumbbell&quot;     &quot;var_roll_dumbbell&quot;       
-## [107] &quot;avg_pitch_dumbbell&quot;       &quot;stddev_pitch_dumbbell&quot;   
-## [109] &quot;var_pitch_dumbbell&quot;       &quot;avg_yaw_dumbbell&quot;        
-## [111] &quot;stddev_yaw_dumbbell&quot;      &quot;var_yaw_dumbbell&quot;        
-## [113] &quot;gyros_dumbbell_x&quot;         &quot;gyros_dumbbell_y&quot;        
-## [115] &quot;gyros_dumbbell_z&quot;         &quot;accel_dumbbell_x&quot;        
-## [117] &quot;accel_dumbbell_y&quot;         &quot;accel_dumbbell_z&quot;        
-## [119] &quot;magnet_dumbbell_x&quot;        &quot;magnet_dumbbell_y&quot;       
-## [121] &quot;magnet_dumbbell_z&quot;        &quot;roll_forearm&quot;            
-## [123] &quot;pitch_forearm&quot;            &quot;yaw_forearm&quot;             
-## [125] &quot;kurtosis_roll_forearm&quot;    &quot;kurtosis_picth_forearm&quot;  
-## [127] &quot;kurtosis_yaw_forearm&quot;     &quot;skewness_roll_forearm&quot;   
-## [129] &quot;skewness_pitch_forearm&quot;   &quot;skewness_yaw_forearm&quot;    
-## [131] &quot;max_roll_forearm&quot;         &quot;max_picth_forearm&quot;       
-## [133] &quot;max_yaw_forearm&quot;          &quot;min_roll_forearm&quot;        
-## [135] &quot;min_pitch_forearm&quot;        &quot;min_yaw_forearm&quot;         
-## [137] &quot;amplitude_roll_forearm&quot;   &quot;amplitude_pitch_forearm&quot; 
-## [139] &quot;amplitude_yaw_forearm&quot;    &quot;total_accel_forearm&quot;     
-## [141] &quot;var_accel_forearm&quot;        &quot;avg_roll_forearm&quot;        
-## [143] &quot;stddev_roll_forearm&quot;      &quot;var_roll_forearm&quot;        
-## [145] &quot;avg_pitch_forearm&quot;        &quot;stddev_pitch_forearm&quot;    
-## [147] &quot;var_pitch_forearm&quot;        &quot;avg_yaw_forearm&quot;         
-## [149] &quot;stddev_yaw_forearm&quot;       &quot;var_yaw_forearm&quot;         
-## [151] &quot;gyros_forearm_x&quot;          &quot;gyros_forearm_y&quot;         
-## [153] &quot;gyros_forearm_z&quot;          &quot;accel_forearm_x&quot;         
-## [155] &quot;accel_forearm_y&quot;          &quot;accel_forearm_z&quot;         
-## [157] &quot;magnet_forearm_x&quot;         &quot;magnet_forearm_y&quot;        
-## [159] &quot;magnet_forearm_z&quot;         &quot;classe&quot;</code></pre>
-<pre><code>## 'data.frame':    19622 obs. of  160 variables:
-##  $ X                       : int  1 2 3 4 5 6 7 8 9 10 ...
-##  $ user_name               : Factor w/ 6 levels &quot;adelmo&quot;,&quot;carlitos&quot;,..: 2 2 2 2 2 2 2 2 2 2 ...
-##  $ raw_timestamp_part_1    : int  1323084231 1323084231 1323084231 1323084232 1323084232 1323084232 1323084232 1323084232 1323084232 1323084232 ...
-##  $ raw_timestamp_part_2    : int  788290 808298 820366 120339 196328 304277 368296 440390 484323 484434 ...
-##  $ cvtd_timestamp          : Factor w/ 20 levels &quot;02/12/2011 13:32&quot;,..: 9 9 9 9 9 9 9 9 9 9 ...
-##  $ new_window              : Factor w/ 2 levels &quot;no&quot;,&quot;yes&quot;: 1 1 1 1 1 1 1 1 1 1 ...
-##  $ num_window              : int  11 11 11 12 12 12 12 12 12 12 ...
-##  $ roll_belt               : num  1.41 1.41 1.42 1.48 1.48 1.45 1.42 1.42 1.43 1.45 ...
-##  $ pitch_belt              : num  8.07 8.07 8.07 8.05 8.07 8.06 8.09 8.13 8.16 8.17 ...
-##  $ yaw_belt                : num  -94.4 -94.4 -94.4 -94.4 -94.4 -94.4 -94.4 -94.4 -94.4 -94.4 ...
-##  $ total_accel_belt        : int  3 3 3 3 3 3 3 3 3 3 ...
-##  $ kurtosis_roll_belt      : Factor w/ 397 levels &quot;&quot;,&quot;-0.016850&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
-##  $ kurtosis_picth_belt     : Factor w/ 317 levels &quot;&quot;,&quot;-0.021887&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
-##  $ kurtosis_yaw_belt       : Factor w/ 2 levels &quot;&quot;,&quot;#DIV/0!&quot;: 1 1 1 1 1 1 1 1 1 1 ...
-##  $ skewness_roll_belt      : Factor w/ 395 levels &quot;&quot;,&quot;-0.003095&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
-##  $ skewness_roll_belt.1    : Factor w/ 338 levels &quot;&quot;,&quot;-0.005928&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
-##  $ skewness_yaw_belt       : Factor w/ 2 levels &quot;&quot;,&quot;#DIV/0!&quot;: 1 1 1 1 1 1 1 1 1 1 ...
-##  $ max_roll_belt           : num  NA NA NA NA NA NA NA NA NA NA ...
-##  $ max_picth_belt          : int  NA NA NA NA NA NA NA NA NA NA ...
-##  $ max_yaw_belt            : Factor w/ 68 levels &quot;&quot;,&quot;-0.1&quot;,&quot;-0.2&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
-##  $ min_roll_belt           : num  NA NA NA NA NA NA NA NA NA NA ...
-##  $ min_pitch_belt          : int  NA NA NA NA NA NA NA NA NA NA ...
-##  $ min_yaw_belt            : Factor w/ 68 levels &quot;&quot;,&quot;-0.1&quot;,&quot;-0.2&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
-##  $ amplitude_roll_belt     : num  NA NA NA NA NA NA NA NA NA NA ...
-##  $ amplitude_pitch_belt    : int  NA NA NA NA NA NA NA NA NA NA ...
-##  $ amplitude_yaw_belt      : Factor w/ 4 levels &quot;&quot;,&quot;#DIV/0!&quot;,&quot;0.00&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
-##  $ var_total_accel_belt    : num  NA NA NA NA NA NA NA NA NA NA ...
-##  $ avg_roll_belt           : num  NA NA NA NA NA NA NA NA NA NA ...
-##  $ stddev_roll_belt        : num  NA NA NA NA NA NA NA NA NA NA ...
-##  $ var_roll_belt           : num  NA NA NA NA NA NA NA NA NA NA ...
-##  $ avg_pitch_belt          : num  NA NA NA NA NA NA NA NA NA NA ...
-##  $ stddev_pitch_belt       : num  NA NA NA NA NA NA NA NA NA NA ...
-##  $ var_pitch_belt          : num  NA NA NA NA NA NA NA NA NA NA ...
-##  $ avg_yaw_belt            : num  NA NA NA NA NA NA NA NA NA NA ...
-##  $ stddev_yaw_belt         : num  NA NA NA NA NA NA NA NA NA NA ...
-##  $ var_yaw_belt            : num  NA NA NA NA NA NA NA NA NA NA ...
-##  $ gyros_belt_x            : num  0 0.02 0 0.02 0.02 0.02 0.02 0.02 0.02 0.03 ...
-##  $ gyros_belt_y            : num  0 0 0 0 0.02 0 0 0 0 0 ...
-##  $ gyros_belt_z            : num  -0.02 -0.02 -0.02 -0.03 -0.02 -0.02 -0.02 -0.02 -0.02 0 ...
-##  $ accel_belt_x            : int  -21 -22 -20 -22 -21 -21 -22 -22 -20 -21 ...
-##  $ accel_belt_y            : int  4 4 5 3 2 4 3 4 2 4 ...
-##  $ accel_belt_z            : int  22 22 23 21 24 21 21 21 24 22 ...
-##  $ magnet_belt_x           : int  -3 -7 -2 -6 -6 0 -4 -2 1 -3 ...
-##  $ magnet_belt_y           : int  599 608 600 604 600 603 599 603 602 609 ...
-##  $ magnet_belt_z           : int  -313 -311 -305 -310 -302 -312 -311 -313 -312 -308 ...
-##  $ roll_arm                : num  -128 -128 -128 -128 -128 -128 -128 -128 -128 -128 ...
-##  $ pitch_arm               : num  22.5 22.5 22.5 22.1 22.1 22 21.9 21.8 21.7 21.6 ...
-##  $ yaw_arm                 : num  -161 -161 -161 -161 -161 -161 -161 -161 -161 -161 ...
-##  $ total_accel_arm         : int  34 34 34 34 34 34 34 34 34 34 ...
-##  $ var_accel_arm           : num  NA NA NA NA NA NA NA NA NA NA ...
-##  $ avg_roll_arm            : num  NA NA NA NA NA NA NA NA NA NA ...
-##  $ stddev_roll_arm         : num  NA NA NA NA NA NA NA NA NA NA ...
-##  $ var_roll_arm            : num  NA NA NA NA NA NA NA NA NA NA ...
-##  $ avg_pitch_arm           : num  NA NA NA NA NA NA NA NA NA NA ...
-##  $ stddev_pitch_arm        : num  NA NA NA NA NA NA NA NA NA NA ...
-##  $ var_pitch_arm           : num  NA NA NA NA NA NA NA NA NA NA ...
-##  $ avg_yaw_arm             : num  NA NA NA NA NA NA NA NA NA NA ...
-##  $ stddev_yaw_arm          : num  NA NA NA NA NA NA NA NA NA NA ...
-##  $ var_yaw_arm             : num  NA NA NA NA NA NA NA NA NA NA ...
-##  $ gyros_arm_x             : num  0 0.02 0.02 0.02 0 0.02 0 0.02 0.02 0.02 ...
-##  $ gyros_arm_y             : num  0 -0.02 -0.02 -0.03 -0.03 -0.03 -0.03 -0.02 -0.03 -0.03 ...
-##  $ gyros_arm_z             : num  -0.02 -0.02 -0.02 0.02 0 0 0 0 -0.02 -0.02 ...
-##  $ accel_arm_x             : int  -288 -290 -289 -289 -289 -289 -289 -289 -288 -288 ...
-##  $ accel_arm_y             : int  109 110 110 111 111 111 111 111 109 110 ...
-##  $ accel_arm_z             : int  -123 -125 -126 -123 -123 -122 -125 -124 -122 -124 ...
-##  $ magnet_arm_x            : int  -368 -369 -368 -372 -374 -369 -373 -372 -369 -376 ...
-##  $ magnet_arm_y            : int  337 337 344 344 337 342 336 338 341 334 ...
-##  $ magnet_arm_z            : int  516 513 513 512 506 513 509 510 518 516 ...
-##  $ kurtosis_roll_arm       : Factor w/ 330 levels &quot;&quot;,&quot;-0.02438&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
-##  $ kurtosis_picth_arm      : Factor w/ 328 levels &quot;&quot;,&quot;-0.00484&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
-##  $ kurtosis_yaw_arm        : Factor w/ 395 levels &quot;&quot;,&quot;-0.01548&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
-##  $ skewness_roll_arm       : Factor w/ 331 levels &quot;&quot;,&quot;-0.00051&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
-##  $ skewness_pitch_arm      : Factor w/ 328 levels &quot;&quot;,&quot;-0.00184&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
-##  $ skewness_yaw_arm        : Factor w/ 395 levels &quot;&quot;,&quot;-0.00311&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
-##  $ max_roll_arm            : num  NA NA NA NA NA NA NA NA NA NA ...
-##  $ max_picth_arm           : num  NA NA NA NA NA NA NA NA NA NA ...
-##  $ max_yaw_arm             : int  NA NA NA NA NA NA NA NA NA NA ...
-##  $ min_roll_arm            : num  NA NA NA NA NA NA NA NA NA NA ...
-##  $ min_pitch_arm           : num  NA NA NA NA NA NA NA NA NA NA ...
-##  $ min_yaw_arm             : int  NA NA NA NA NA NA NA NA NA NA ...
-##  $ amplitude_roll_arm      : num  NA NA NA NA NA NA NA NA NA NA ...
-##  $ amplitude_pitch_arm     : num  NA NA NA NA NA NA NA NA NA NA ...
-##  $ amplitude_yaw_arm       : int  NA NA NA NA NA NA NA NA NA NA ...
-##  $ roll_dumbbell           : num  13.1 13.1 12.9 13.4 13.4 ...
-##  $ pitch_dumbbell          : num  -70.5 -70.6 -70.3 -70.4 -70.4 ...
-##  $ yaw_dumbbell            : num  -84.9 -84.7 -85.1 -84.9 -84.9 ...
-##  $ kurtosis_roll_dumbbell  : Factor w/ 398 levels &quot;&quot;,&quot;-0.0035&quot;,&quot;-0.0073&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
-##  $ kurtosis_picth_dumbbell : Factor w/ 401 levels &quot;&quot;,&quot;-0.0163&quot;,&quot;-0.0233&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
-##  $ kurtosis_yaw_dumbbell   : Factor w/ 2 levels &quot;&quot;,&quot;#DIV/0!&quot;: 1 1 1 1 1 1 1 1 1 1 ...
-##  $ skewness_roll_dumbbell  : Factor w/ 401 levels &quot;&quot;,&quot;-0.0082&quot;,&quot;-0.0096&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
-##  $ skewness_pitch_dumbbell : Factor w/ 402 levels &quot;&quot;,&quot;-0.0053&quot;,&quot;-0.0084&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
-##  $ skewness_yaw_dumbbell   : Factor w/ 2 levels &quot;&quot;,&quot;#DIV/0!&quot;: 1 1 1 1 1 1 1 1 1 1 ...
-##  $ max_roll_dumbbell       : num  NA NA NA NA NA NA NA NA NA NA ...
-##  $ max_picth_dumbbell      : num  NA NA NA NA NA NA NA NA NA NA ...
-##  $ max_yaw_dumbbell        : Factor w/ 73 levels &quot;&quot;,&quot;-0.1&quot;,&quot;-0.2&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
-##  $ min_roll_dumbbell       : num  NA NA NA NA NA NA NA NA NA NA ...
-##  $ min_pitch_dumbbell      : num  NA NA NA NA NA NA NA NA NA NA ...
-##  $ min_yaw_dumbbell        : Factor w/ 73 levels &quot;&quot;,&quot;-0.1&quot;,&quot;-0.2&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
-##  $ amplitude_roll_dumbbell : num  NA NA NA NA NA NA NA NA NA NA ...
-##   [list output truncated]</code></pre>
-<pre><code>##     [1] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##    [35] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##    [69] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##   [103] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##   [137] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##   [171] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##   [205] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##   [239] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##   [273] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##   [307] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##   [341] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##   [375] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##   [409] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##   [443] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##   [477] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##   [511] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##   [545] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##   [579] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##   [613] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##   [647] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##   [681] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##   [715] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##   [749] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##   [783] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##   [817] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##   [851] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##   [885] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##   [919] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##   [953] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##   [987] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [1021] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [1055] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [1089] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [1123] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [1157] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [1191] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [1225] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [1259] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [1293] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [1327] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [1361] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [1395] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [1429] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [1463] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [1497] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [1531] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [1565] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [1599] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [1633] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [1667] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [1701] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [1735] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [1769] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [1803] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [1837] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [1871] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [1905] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [1939] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [1973] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [2007] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [2041] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [2075] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [2109] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [2143] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [2177] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [2211] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [2245] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [2279] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [2313] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [2347] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [2381] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [2415] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [2449] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [2483] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [2517] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [2551] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [2585] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [2619] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [2653] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [2687] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [2721] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [2755] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [2789] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [2823] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [2857] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [2891] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [2925] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [2959] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [2993] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [3027] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [3061] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [3095] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [3129] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [3163] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [3197] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [3231] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [3265] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [3299] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [3333] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [3367] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [3401] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [3435] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [3469] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [3503] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [3537] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [3571] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [3605] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [3639] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [3673] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [3707] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [3741] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [3775] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [3809] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [3843] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [3877] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [3911] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [3945] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [3979] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [4013] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [4047] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [4081] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [4115] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [4149] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [4183] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [4217] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [4251] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [4285] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [4319] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [4353] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [4387] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [4421] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [4455] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [4489] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [4523] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [4557] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [4591] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [4625] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [4659] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [4693] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [4727] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [4761] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [4795] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [4829] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [4863] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [4897] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [4931] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [4965] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [4999] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [5033] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [5067] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [5101] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [5135] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [5169] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [5203] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [5237] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [5271] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [5305] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [5339] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [5373] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [5407] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [5441] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [5475] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [5509] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [5543] A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A
-##  [5577] A A A A B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [5611] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [5645] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [5679] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [5713] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [5747] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [5781] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [5815] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [5849] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [5883] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [5917] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [5951] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [5985] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [6019] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [6053] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [6087] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [6121] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [6155] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [6189] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [6223] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [6257] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [6291] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [6325] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [6359] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [6393] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [6427] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [6461] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [6495] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [6529] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [6563] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [6597] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [6631] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [6665] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [6699] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [6733] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [6767] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [6801] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [6835] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [6869] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [6903] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [6937] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [6971] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [7005] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [7039] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [7073] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [7107] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [7141] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [7175] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [7209] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [7243] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [7277] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [7311] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [7345] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [7379] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [7413] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [7447] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [7481] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [7515] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [7549] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [7583] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [7617] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [7651] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [7685] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [7719] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [7753] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [7787] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [7821] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [7855] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [7889] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [7923] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [7957] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [7991] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [8025] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [8059] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [8093] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [8127] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [8161] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [8195] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [8229] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [8263] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [8297] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [8331] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [8365] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [8399] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [8433] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [8467] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [8501] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [8535] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [8569] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [8603] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [8637] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [8671] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [8705] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [8739] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [8773] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [8807] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [8841] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [8875] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [8909] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [8943] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [8977] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [9011] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [9045] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [9079] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [9113] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [9147] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [9181] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [9215] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [9249] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [9283] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [9317] B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B
-##  [9351] B B B B B B B B B B B B B B B B B B B B B B B B B B B C C C C C C C
-##  [9385] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-##  [9419] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-##  [9453] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-##  [9487] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-##  [9521] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-##  [9555] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-##  [9589] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-##  [9623] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-##  [9657] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-##  [9691] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-##  [9725] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-##  [9759] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-##  [9793] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-##  [9827] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-##  [9861] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-##  [9895] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-##  [9929] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-##  [9963] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-##  [9997] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [10031] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [10065] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [10099] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [10133] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [10167] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [10201] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [10235] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [10269] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [10303] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [10337] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [10371] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [10405] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [10439] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [10473] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [10507] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [10541] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [10575] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [10609] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [10643] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [10677] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [10711] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [10745] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [10779] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [10813] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [10847] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [10881] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [10915] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [10949] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [10983] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [11017] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [11051] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [11085] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [11119] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [11153] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [11187] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [11221] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [11255] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [11289] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [11323] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [11357] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [11391] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [11425] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [11459] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [11493] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [11527] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [11561] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [11595] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [11629] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [11663] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [11697] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [11731] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [11765] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [11799] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [11833] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [11867] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [11901] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [11935] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [11969] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [12003] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [12037] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [12071] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [12105] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [12139] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [12173] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [12207] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [12241] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [12275] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [12309] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [12343] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [12377] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [12411] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [12445] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [12479] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [12513] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [12547] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [12581] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [12615] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [12649] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [12683] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [12717] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [12751] C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C C
-## [12785] C C C C C C C C C C C C C C C D D D D D D D D D D D D D D D D D D D
-## [12819] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [12853] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [12887] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [12921] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [12955] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [12989] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [13023] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [13057] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [13091] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [13125] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [13159] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [13193] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [13227] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [13261] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [13295] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [13329] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [13363] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [13397] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [13431] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [13465] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [13499] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [13533] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [13567] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [13601] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [13635] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [13669] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [13703] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [13737] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [13771] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [13805] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [13839] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [13873] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [13907] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [13941] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [13975] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [14009] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [14043] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [14077] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [14111] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [14145] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [14179] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [14213] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [14247] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [14281] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [14315] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [14349] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [14383] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [14417] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [14451] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [14485] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [14519] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [14553] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [14587] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [14621] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [14655] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [14689] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [14723] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [14757] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [14791] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [14825] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [14859] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [14893] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [14927] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [14961] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [14995] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [15029] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [15063] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [15097] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [15131] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [15165] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [15199] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [15233] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [15267] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [15301] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [15335] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [15369] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [15403] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [15437] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [15471] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [15505] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [15539] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [15573] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [15607] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [15641] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [15675] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [15709] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [15743] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [15777] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [15811] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [15845] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [15879] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [15913] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [15947] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [15981] D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D D
-## [16015] D E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [16049] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [16083] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [16117] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [16151] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [16185] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [16219] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [16253] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [16287] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [16321] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [16355] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [16389] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [16423] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [16457] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [16491] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [16525] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [16559] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [16593] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [16627] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [16661] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [16695] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [16729] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [16763] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [16797] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [16831] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [16865] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [16899] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [16933] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [16967] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [17001] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [17035] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [17069] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [17103] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [17137] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [17171] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [17205] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [17239] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [17273] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [17307] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [17341] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [17375] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [17409] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [17443] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [17477] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [17511] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [17545] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [17579] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [17613] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [17647] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [17681] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [17715] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [17749] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [17783] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [17817] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [17851] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [17885] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [17919] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [17953] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [17987] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [18021] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [18055] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [18089] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [18123] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [18157] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [18191] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [18225] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [18259] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [18293] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [18327] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [18361] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [18395] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [18429] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [18463] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [18497] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [18531] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [18565] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [18599] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [18633] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [18667] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [18701] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [18735] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [18769] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [18803] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [18837] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [18871] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [18905] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [18939] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [18973] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [19007] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [19041] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [19075] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [19109] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [19143] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [19177] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [19211] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [19245] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [19279] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [19313] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [19347] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [19381] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [19415] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [19449] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [19483] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [19517] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [19551] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [19585] E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E E
-## [19619] E E E E
+<div id="model-creation" class="section level2">
+<h2>Model creation</h2>
+<div id="extract-transform-and-load-data" class="section level3">
+<h3>Extract, transform and load data</h3>
+<ul>
+<li><p>The training data for this project are available here: <a href="https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv" class="uri">https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv</a></p></li>
+<li><p>The test data are available here: <a href="https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv" class="uri">https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv</a></p></li>
+</ul>
+<p><em>Code 01. Extract files and data.</em></p>
+<pre class="r"><code>########################
+#Extract files and data#
+########################
+
+initValues &lt;- function(){
+        
+        #Set URL path
+        URLTraining &lt;&lt;- &quot;https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv&quot;
+        URLTesting &lt;&lt;- &quot;https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv&quot;
+
+        #Set csv name
+        fileTraining &lt;&lt;- &quot;training.csv&quot;
+        fileTesting &lt;&lt;- &quot;testing.csv&quot;
+}
+
+extractData &lt;- function(){
+        
+        #Init values and setup access to https
+        initValues()
+        setInternet2(use = TRUE)
+
+        #Adquire training file
+        if (!file.exists(fileTraining)) download.file(URLTraining, fileTraining)
+        trainingData &lt;&lt;- read.csv(fileTraining)
+        
+        #Adquire testing file
+        if (!file.exists(fileTesting)) download.file(URLTesting, fileTesting)
+        testingData &lt;&lt;- read.csv(fileTesting)
+
+}
+
+extractData()</code></pre>
+<hr />
+</div>
+<div id="initial-data-analysis" class="section level3">
+<h3>Initial Data analysis</h3>
+<p>Based on information and data extracted from: (<a href="http://groupware.les.inf.puc-rio.br/har#weight_lifting_exercises" class="uri">http://groupware.les.inf.puc-rio.br/har#weight_lifting_exercises</a>)</p>
+<blockquote>
+<h6 id="please-cite-this-paper-to-refer-the-wle-dataset-velloso-e.-bulling-a.-gellersen-h.-ugulino-w.-fuks-h.-qualitative-activity-recognition-of-weight-lifting-exercises.-proceedings-of-4th-international-conference-in-cooperation-with-sigchi-augmented-human-13-.-stuttgart-germany-acm-sigchi-2013.">Please, cite this paper to refer the WLE dataset: Velloso, E.; Bulling, A.; Gellersen, H.; Ugulino, W.; Fuks, H. Qualitative Activity Recognition of Weight Lifting Exercises. Proceedings of 4th International Conference in Cooperation with SIGCHI (Augmented Human ’13) . Stuttgart, Germany: ACM SIGCHI, 2013.</h6>
+<h6 id="read-more-httpgroupware.les.inf.puc-rio.brharweight_lifting_exercisesixzz3fnkrbc4a">Read more: (<a href="http://groupware.les.inf.puc-rio.br/har#weight_lifting_exercises#ixzz3fnKRBc4a" class="uri">http://groupware.les.inf.puc-rio.br/har#weight_lifting_exercises#ixzz3fnKRBc4a</a>)</h6>
+</blockquote>
+<p>The objective of this data is to define quality of execution.</p>
+<p>Six young health participants (carlitos, pedro, adelmo, charles, eurico, jeremy) were asked to perform one set of 10 repetitions of the Unilateral Dumbbell Biceps Curl in five different fashion that was stored into <strong>classe</strong> variable with these 5 types:</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Fashion</th>
+<th align="left">Classification</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">A</td>
+<td align="left">exactly according to the specification</td>
+<td align="left">Correct</td>
+</tr>
+<tr class="even">
+<td align="left">B</td>
+<td align="left">throwing the elbows to the front</td>
+<td align="left">Mistake</td>
+</tr>
+<tr class="odd">
+<td align="left">C</td>
+<td align="left">lifting the dumbbell only halfway</td>
+<td align="left">Mistake</td>
+</tr>
+<tr class="even">
+<td align="left">D</td>
+<td align="left">lowering the dumbbell only halfway</td>
+<td align="left">Mistake</td>
+</tr>
+<tr class="odd">
+<td align="left">E</td>
+<td align="left">throwing the hips to the front</td>
+<td align="left">Mistake</td>
+</tr>
+</tbody>
+</table>
+<p>There is a total of <strong>159</strong> variables as predictors.</p>
+<p>Data collects information from 4 sensors (belt, arm, dumbbell, forearm), each sensor has 3 detectors (acceleration, gyroscope and magnetometer) and each detector has 3 axis <strong>(x, y, z)</strong>, that makes a total of 36 variables. Other sensors predictors are derivated from these predictors.</p>
+<p>For our analysis model are selected as relevant sensors predictors these:</p>
+<blockquote>
+<h5 id="gyros_belt_x-gyros_belt_y-gyros_belt_z-accel_belt_x-accel_belt_y-accel_belt_z-magnet_belt_x-magnet_belt_y-magnet_belt_z-gyros_arm_x-gyros_arm_y-gyros_arm_z-accel_arm_x-accel_arm_y-accel_arm_z-magnet_arm_x-magnet_arm_y-magnet_arm_z-gyros_dumbbell_x-gyros_dumbbell_y-gyros_dumbbell_z-accel_dumbbell_x-accel_dumbbell_y-accel_dumbbell_z-magnet_dumbbell_x-magnet_dumbbell_y-magnet_dumbbell_z-gyros_forearm_x-gyros_forearm_y-gyros_forearm_z-accel_forearm_x-accel_forearm_y-accel_forearm_z-magnet_forearm_x-magnet_forearm_y-magnet_forearm_z">gyros_belt_x, gyros_belt_y, gyros_belt_z, accel_belt_x, accel_belt_y, accel_belt_z, magnet_belt_x, magnet_belt_y, magnet_belt_z, gyros_arm_x, gyros_arm_y, gyros_arm_z, accel_arm_x, accel_arm_y, accel_arm_z, magnet_arm_x, magnet_arm_y, magnet_arm_z, gyros_dumbbell_x, gyros_dumbbell_y, gyros_dumbbell_z, accel_dumbbell_x, accel_dumbbell_y, accel_dumbbell_z, magnet_dumbbell_x, magnet_dumbbell_y, magnet_dumbbell_z, gyros_forearm_x, gyros_forearm_y, gyros_forearm_z, accel_forearm_x, accel_forearm_y, accel_forearm_z, magnet_forearm_x, magnet_forearm_y, magnet_forearm_z</h5>
+</blockquote>
+<p>Also, exists a <strong>user_name</strong> predictor, that indicates who is the user, including this predictor increases the prediction accuracy when the user has participated on training.</p>
+<p>Other relevant predictors are <strong>new_window</strong> (indicates start of repetition) and <strong>num_window</strong> (indentificates a repetition).</p>
+<hr />
+</div>
+<div id="proposal" class="section level3">
+<h3>Proposal</h3>
+<p>Are proposed two model options based on these premises:</p>
+<p>Included into both models:</p>
+<ul>
+<li>It’s presumed that sensors are basic to prediction.</li>
+<li>Because the prediction is about users that participates on training, include user_name as predictor have to improve accuracy.</li>
+</ul>
+<p>Included into final model:</p>
+<ul>
+<li>When starts repetition new_window and which repetition is num_window can be relevant to prediction.</li>
+</ul>
+<hr />
+</div>
+<div id="initial-model-sensors-and-user-name-37-predictors-x-y-and-z-axis-for-sensors-user_name." class="section level3">
+<h3>Initial Model: sensors and user name: 37 predictors: X, y and z axis for sensors + user_name.</h3>
+<p>Predictors:</p>
+<blockquote>
+<h5 id="user_name-gyros_belt_x-gyros_belt_y-gyros_belt_z-accel_belt_x-accel_belt_y-accel_belt_z-magnet_belt_x-magnet_belt_y-magnet_belt_z-gyros_arm_x-gyros_arm_y-gyros_arm_z-accel_arm_x-accel_arm_y-accel_arm_z-magnet_arm_x-magnet_arm_y-magnet_arm_z-gyros_dumbbell_x-gyros_dumbbell_y-gyros_dumbbell_z-accel_dumbbell_x-accel_dumbbell_y-accel_dumbbell_z-magnet_dumbbell_x-magnet_dumbbell_y-magnet_dumbbell_z-gyros_forearm_x-gyros_forearm_y-gyros_forearm_z-accel_forearm_x-accel_forearm_y-accel_forearm_z-magnet_forearm_x-magnet_forearm_y-magnet_forearm_z">user_name, gyros_belt_x, gyros_belt_y, gyros_belt_z, accel_belt_x, accel_belt_y, accel_belt_z, magnet_belt_x, magnet_belt_y, magnet_belt_z, gyros_arm_x, gyros_arm_y, gyros_arm_z, accel_arm_x, accel_arm_y, accel_arm_z, magnet_arm_x, magnet_arm_y, magnet_arm_z, gyros_dumbbell_x, gyros_dumbbell_y, gyros_dumbbell_z, accel_dumbbell_x, accel_dumbbell_y, accel_dumbbell_z, magnet_dumbbell_x, magnet_dumbbell_y, magnet_dumbbell_z, gyros_forearm_x, gyros_forearm_y, gyros_forearm_z, accel_forearm_x, accel_forearm_y, accel_forearm_z, magnet_forearm_x, magnet_forearm_y, magnet_forearm_z</h5>
+</blockquote>
+<p>For combined model is used a Random Forest model that is a combination of LDA, Booting and Random Forest model’s predictions.</p>
+<p>Cross validation:</p>
+<ul>
+<li>Dataset for training, testing and validanting contains 37 preditors and classe.</li>
+<li>Separate Training Data into three sets: 60% training set, 20% testing set and 20% validating set.</li>
+<li>Validation set is used to confirm the results obtained with testing set.</li>
+</ul>
+<pre class="r"><code>require(caret)
+require(kernlab)
+require(pROC)
+
+#Based on training data create training sets and test sets
+set.seed(1525)
+
+Dataset &lt;- trainingData[,grep(&quot;_x$|_y$|_z$|user|classe&quot;, colnames(trainingData))]
+
+inBuild &lt;- createDataPartition(y=Dataset$classe, p=0.8, list=FALSE)
+
+#validation set
+validation &lt;- Dataset[-inBuild,]
+
+buildData &lt;- Dataset[inBuild,]
+
+inTrain &lt;- createDataPartition(y=buildData$classe, p=0.75, list=FALSE)
+
+#training set
+trainingSet &lt;- buildData[inTrain,]
+
+#testing set
+testingSet &lt;- buildData[-inTrain,]</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Set</th>
+<th align="left">%</th>
+<th align="left">Sample dimension</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Training</td>
+<td align="left">60%</td>
+<td align="left">11776</td>
+</tr>
+<tr class="even">
+<td align="left">Testing</td>
+<td align="left">20%</td>
+<td align="left">3923</td>
+</tr>
+<tr class="odd">
+<td align="left">Validating</td>
+<td align="left">20%</td>
+<td align="left">3923</td>
+</tr>
+</tbody>
+</table>
+<div id="lda-model-linear-discriminant-analysis" class="section level4">
+<h4>LDA Model: Linear discriminant analysis</h4>
+<pre class="r"><code>require(MASS)</code></pre>
+<pre><code>## Loading required package: MASS</code></pre>
+<pre class="r"><code>load(&quot;models/modelLDA.rda&quot;)
+if (!exists(&quot;modelLDA&quot;)) {
+
+        modelLDA &lt;- train(classe ~ ., data = trainingSet, method=&quot;lda&quot;)
+        save(modelLDA, file=&quot;models/modelLDA.rda&quot;)
+}
+
+predictedLDA &lt;- predict(modelLDA, testingSet)
+cmLDAt &lt;- confusionMatrix(predictedLDA, testingSet$classe)
+#Accuracy : 0.6628 Kappa : 0.5721
+predictedLDAv &lt;- predict(modelLDA, validation)
+cmLDAv &lt;- confusionMatrix(predictedLDAv, validation$classe)
+#Accuracy : 0.6538 Kappa : 0.5605</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Set</th>
+<th align="left">Testing Set</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Accuracy</td>
+<td align="left">66.2758093%</td>
+</tr>
+<tr class="even">
+<td align="left">Accuracy(95%)</td>
+<td align="left">63.8711346, 66.8731876%</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="gbm-model-gradient-boosting-machine" class="section level4">
+<h4>GBM model: Gradient Boosting Machine</h4>
+<pre class="r"><code>require(gbm)</code></pre>
+<pre><code>## Loading required package: gbm
+## Loading required package: survival
+## 
+## Attaching package: 'survival'
+## 
+## The following object is masked from 'package:caret':
+## 
+##     cluster
+## 
+## Loading required package: splines
+## Loading required package: parallel
+## Loaded gbm 2.1.1</code></pre>
+<pre class="r"><code>load(&quot;models/modelGBM.rda&quot;)
+if (!exists(&quot;modelGBM&quot;)) {
+        modelGBM &lt;- train(classe ~ ., data = trainingSet, method=&quot;gbm&quot;)
+        save(modelGBM, file=&quot;models/modelGBM.rda&quot;)
+}
+
+predictedGBM &lt;- predict(modelGBM, testingSet)</code></pre>
+<pre><code>## Loading required package: plyr</code></pre>
+<pre class="r"><code>cmGBMt &lt;- confusionMatrix(predictedGBM, testingSet$classe)
+#Consumes a lot of computing time +- 15 minutos
+#Accuracy : 0.9123 Kappa : 0.8889
+predictedGBMv &lt;- predict(modelGBM, validation)
+cmGBMv &lt;- confusionMatrix(predictedGBMv, validation$classe)
+#Accuracy : 0.9039 Kappa : 0.8782</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Set</th>
+<th align="left">Testing Set</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Accuracy</td>
+<td align="left">91.2312006%</td>
+</tr>
+<tr class="even">
+<td align="left">Accuracy(95%)</td>
+<td align="left">90.3023658, 92.098066%</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="rf-model-random-forest." class="section level4">
+<h4>RF model: Random Forest.</h4>
+<ul>
+<li>Parameters: ntree = 100</li>
+</ul>
+<pre class="r"><code>require(randomForest)</code></pre>
+<pre><code>## Loading required package: randomForest
+## randomForest 4.6-10
+## Type rfNews() to see new features/changes/bug fixes.</code></pre>
+<pre class="r"><code>load(&quot;models/modelRF.rda&quot;)
+if (!exists(&quot;modelRF&quot;)) {
+        modelRF &lt;- train(classe ~ ., data = trainingSet, method=&quot;rf&quot;, do.trace=10, ntree=100)
+        save(modelRF, file=&quot;models/modelRF.rda&quot;)
+}
+
+predictedRF &lt;- predict(modelRF, testingSet)
+cmRFt &lt;- confusionMatrix(predictedRF, testingSet$classe)
+#Consumes a lot of computing time 6 minutes
+#Accuracy : 0.9801 Kappa : 0.9748 Mcnemar's Test P-Value : NA
+predictedRFv &lt;- predict(modelRF, validation)
+cmRFv &lt;- confusionMatrix(predictedRFv, validation$classe)
+# Accuracy : 0.9809 Kappa : 0.9758 Mcnemar's Test P-Value : NA</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Set</th>
+<th align="left">Testing Set</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Accuracy</td>
+<td align="left">98.0117257%</td>
+</tr>
+<tr class="even">
+<td align="left">Accuracy(95%)</td>
+<td align="left">97.5246823, 98.4252581%</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="combined-model-random-forest-from-other-models-predictions" class="section level4">
+<h4>Combined model: Random forest from other model’s predictions</h4>
+<ul>
+<li>Parameters: ntree = 100</li>
+</ul>
+<pre class="r"><code>#Model combined
+predCompDF &lt;- data.frame(predictedLDA, predictedGBM, predictedRF, y=testingSet$classe)
+
+load(&quot;models/combMod.rda&quot;)
+if (!exists(&quot;combMod&quot;)) {
+        combMod &lt;- train(y ~ ., data = predCompDF, method=&quot;rf&quot;, do.trace=10, ntree=100)
+        save(&quot;combMod&quot;, file=&quot;models/combMod.rda&quot;)
+}
+
+#Time to predict:
+combPred &lt;- predict(combMod, testingSet)
+cmCombt &lt;- confusionMatrix(combPred, testingSet$classe)
+#Accuracy : 0.9801 Kappa : 0.9748
+combPredv &lt;- predict(combMod, validation)
+cmCombv &lt;- confusionMatrix(combPredv, validation$classe)
+#Accuracy : 0.9801 Kappa : 0.9748</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Set</th>
+<th align="left">Testing Set</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Accuracy</td>
+<td align="left">98.0117257%</td>
+</tr>
+<tr class="even">
+<td align="left">Accuracy(95%)</td>
+<td align="left">97.5246823, 98.4252581%</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>#Prediction of testingData Set to upload as result
+tpredictedLDA &lt;- predict(modelLDA, testingData)
+tpredictedGBM &lt;- predict(modelGBM, testingData)
+tpredictedRF &lt;- predict(modelRF, testingData)
+
+newdataset &lt;- data.frame(tpredictedLDA, tpredictedGBM, tpredictedRF)
+colnames(newdataset) &lt;- colnames(predCompDF[,1:3])
+
+tpredictedComb &lt;- predict(combMod, newdata = newdataset)
+
+result &lt;- rbind(seq(1:20), as.character(tpredictedLDA), as.character(tpredictedGBM), as.character(tpredictedRF), as.character(tpredictedComb))
+
+result</code></pre>
+<pre><code>##      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12] [,13]
+## [1,] &quot;1&quot;  &quot;2&quot;  &quot;3&quot;  &quot;4&quot;  &quot;5&quot;  &quot;6&quot;  &quot;7&quot;  &quot;8&quot;  &quot;9&quot;  &quot;10&quot;  &quot;11&quot;  &quot;12&quot;  &quot;13&quot; 
+## [2,] &quot;B&quot;  &quot;A&quot;  &quot;B&quot;  &quot;C&quot;  &quot;A&quot;  &quot;E&quot;  &quot;D&quot;  &quot;D&quot;  &quot;A&quot;  &quot;A&quot;   &quot;A&quot;   &quot;A&quot;   &quot;B&quot;  
+## [3,] &quot;B&quot;  &quot;A&quot;  &quot;B&quot;  &quot;A&quot;  &quot;A&quot;  &quot;C&quot;  &quot;D&quot;  &quot;B&quot;  &quot;A&quot;  &quot;A&quot;   &quot;A&quot;   &quot;C&quot;   &quot;B&quot;  
+## [4,] &quot;B&quot;  &quot;A&quot;  &quot;B&quot;  &quot;A&quot;  &quot;A&quot;  &quot;E&quot;  &quot;D&quot;  &quot;B&quot;  &quot;A&quot;  &quot;A&quot;   &quot;B&quot;   &quot;C&quot;   &quot;B&quot;  
+## [5,] &quot;B&quot;  &quot;A&quot;  &quot;B&quot;  &quot;A&quot;  &quot;A&quot;  &quot;E&quot;  &quot;D&quot;  &quot;B&quot;  &quot;A&quot;  &quot;A&quot;   &quot;B&quot;   &quot;C&quot;   &quot;B&quot;  
+##      [,14] [,15] [,16] [,17] [,18] [,19] [,20]
+## [1,] &quot;14&quot;  &quot;15&quot;  &quot;16&quot;  &quot;17&quot;  &quot;18&quot;  &quot;19&quot;  &quot;20&quot; 
+## [2,] &quot;A&quot;   &quot;E&quot;   &quot;A&quot;   &quot;C&quot;   &quot;B&quot;   &quot;B&quot;   &quot;B&quot;  
+## [3,] &quot;A&quot;   &quot;E&quot;   &quot;E&quot;   &quot;A&quot;   &quot;B&quot;   &quot;B&quot;   &quot;B&quot;  
+## [4,] &quot;A&quot;   &quot;E&quot;   &quot;E&quot;   &quot;A&quot;   &quot;B&quot;   &quot;B&quot;   &quot;B&quot;  
+## [5,] &quot;A&quot;   &quot;E&quot;   &quot;E&quot;   &quot;A&quot;   &quot;B&quot;   &quot;B&quot;   &quot;B&quot;</code></pre>
+<p>Estimated accuracy for testing set with this predictors:</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Model</th>
+<th align="left">Accuracy</th>
+<th align="left">Accuracy 95%</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">LDA</td>
+<td align="left">0.6627581</td>
+<td align="left">0.6477196, 0.6775538</td>
+</tr>
+<tr class="even">
+<td align="left">GBM</td>
+<td align="left">0.912312</td>
+<td align="left">0.9030237, 0.9209807</td>
+</tr>
+<tr class="odd">
+<td align="left">RF</td>
+<td align="left">0.9801173</td>
+<td align="left">0.9752468, 0.9842526</td>
+</tr>
+<tr class="even">
+<td align="left">Comb</td>
+<td align="left">0.9801173</td>
+<td align="left">0.9752468, 0.9842526</td>
+</tr>
+</tbody>
+</table>
+<p>Prediction for testing set: B, A, B, A, A, E, D, B, A, A, B, C, B, A, E, E, A, B, B, B</p>
+<hr />
+</div>
+</div>
+<div id="final-model-sensors-and-user-name-39-predictors-x-y-and-z-axis-for-sensors-user_name-window." class="section level3">
+<h3>Final Model: sensors and user name: 39 predictors: X, y and z axis for sensors + user_name + window.</h3>
+<p>Predictors:</p>
+<blockquote>
+<h5 id="user_name-new_window-num_window-gyros_belt_x-gyros_belt_y-gyros_belt_z-accel_belt_x-accel_belt_y-accel_belt_z-magnet_belt_x-magnet_belt_y-magnet_belt_z-gyros_arm_x-gyros_arm_y-gyros_arm_z-accel_arm_x-accel_arm_y-accel_arm_z-magnet_arm_x-magnet_arm_y-magnet_arm_z-gyros_dumbbell_x-gyros_dumbbell_y-gyros_dumbbell_z-accel_dumbbell_x-accel_dumbbell_y-accel_dumbbell_z-magnet_dumbbell_x-magnet_dumbbell_y-magnet_dumbbell_z-gyros_forearm_x-gyros_forearm_y-gyros_forearm_z-accel_forearm_x-accel_forearm_y-accel_forearm_z-magnet_forearm_x-magnet_forearm_y-magnet_forearm_z">user_name, new_window, num_window, gyros_belt_x, gyros_belt_y, gyros_belt_z, accel_belt_x, accel_belt_y, accel_belt_z, magnet_belt_x, magnet_belt_y, magnet_belt_z, gyros_arm_x, gyros_arm_y, gyros_arm_z, accel_arm_x, accel_arm_y, accel_arm_z, magnet_arm_x, magnet_arm_y, magnet_arm_z, gyros_dumbbell_x, gyros_dumbbell_y, gyros_dumbbell_z, accel_dumbbell_x, accel_dumbbell_y, accel_dumbbell_z, magnet_dumbbell_x, magnet_dumbbell_y, magnet_dumbbell_z, gyros_forearm_x, gyros_forearm_y, gyros_forearm_z, accel_forearm_x, accel_forearm_y, accel_forearm_z, magnet_forearm_x, magnet_forearm_y, magnet_forearm_z</h5>
+</blockquote>
+<p>For combined model is used a Random Forest model that is a combination of LDA, Booting and Random Forest model’s predictions.</p>
+<p>Cross validation:</p>
+<ul>
+<li>Dataset for training, testing and validanting contains 39 preditors and classe.</li>
+<li>Separate Training Data into three sets: 60% training set, 20% testing set and 20% validating set.</li>
+<li>Validation set is used to confirm the results obtained with testing set.</li>
+</ul>
+<pre class="r"><code>#Based on training data create training sets and test sets
+require(caret)
+require(kernlab)
+require(pROC) #varImp()
+
+#Create a model only using x y z axis and user_name, window, classe
+set.seed(1525)
+
+Dataset2 &lt;- trainingData[,grep(&quot;_x$|_y$|_z$|classe|user|window&quot;, colnames(trainingData))]
+
+inBuild2 &lt;- createDataPartition(y=Dataset2$classe, p=0.8, list=FALSE)
+validation2 &lt;- Dataset2[-inBuild2,]
+
+buildData2 &lt;- Dataset2[inBuild2,]
+
+inTrain2 &lt;- createDataPartition(y=buildData2$classe, p=0.75, list=FALSE)
+trainingSet2 &lt;- buildData2[inTrain2,]
+testingSet2 &lt;- buildData2[-inTrain2,]</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Set</th>
+<th align="left">%</th>
+<th align="left">Dimensions</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Training</td>
+<td align="left">60%</td>
+<td align="left">11776, 40</td>
+</tr>
+<tr class="even">
+<td align="left">Testing</td>
+<td align="left">20%</td>
+<td align="left">3923, 40</td>
+</tr>
+<tr class="odd">
+<td align="left">Validating</td>
+<td align="left">20%</td>
+<td align="left">3923, 40</td>
+</tr>
+</tbody>
+</table>
+<div id="use-a-lda-model-linear-discriminant-analysis" class="section level4">
+<h4>Use a LDA Model: Linear discriminant analysis</h4>
+<pre class="r"><code>#Model LDA
+require(MASS)
+
+load(&quot;models/modelLDA2.rda&quot;)
+if (!exists(&quot;modelLDA2&quot;)) {
+        modelLDA2 &lt;- train(classe ~ ., data = trainingSet2, method=&quot;lda&quot;)
+        save(modelLDA2, file=&quot;models/modelLDA2.rda&quot;)
+}
+
+predictedLDA2 &lt;- predict(modelLDA2, testingSet2)
+cmLDA2t &lt;- confusionMatrix(predictedLDA2, testingSet2$classe)
+#Accuracy : 0.6702 Kappa : 0.5815
+predictedLDA2v &lt;- predict(modelLDA2, validation2)
+cmLDA2v &lt;- confusionMatrix(predictedLDA2v, validation2$classe)
+#Accuracy : 0.6643 Kappa : 0.5735  </code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Set</th>
+<th align="left">Testing Set</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Accuracy</td>
+<td align="left">67.0150395%</td>
+</tr>
+<tr class="even">
+<td align="left">Accuracy(95%)</td>
+<td align="left">65.5187948, 68.4858996%</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="gbm-model-gradient-boosting-machine-1" class="section level4">
+<h4>GBM model: Gradient Boosting Machine</h4>
+<pre class="r"><code>#Third model GBM
+require(gbm)
+
+load(&quot;models/modelGBM2.rda&quot;)
+if (!exists(&quot;modelGBM2&quot;)) {
+        modelGBM2 &lt;- train(classe ~ ., data = trainingSet2, method=&quot;gbm&quot;)
+        save(modelGBM2, file=&quot;models/modelGBM2.rda&quot;)
+}
+
+predictedGBM2 &lt;- predict(modelGBM2, testingSet2)
+cmGBM2t &lt;- confusionMatrix(predictedGBM2, testingSet2$classe)
+#Consumes a lot of computing time 13:51 - 14:12
+#Accuracy : 0.9862 Kappa : 0.9826 Mcnemar's Test P-Value : NA
+predictedGBM2v &lt;- predict(modelGBM2, validation2)
+cmGBM2v &lt;- confusionMatrix(predictedGBM2v, validation2$classe)
+# Accuracy : 0.9845 Kappa : 0.9803 Mcnemar's Test P-Value : NA</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Set</th>
+<th align="left">Testing Set</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Accuracy</td>
+<td align="left">98.6235024%</td>
+</tr>
+<tr class="even">
+<td align="left">Accuracy(95%)</td>
+<td align="left">98.2077439, 98.9642864%</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="rf-model-random-forest.-1" class="section level4">
+<h4>RF model: Random Forest.</h4>
+<ul>
+<li>Parameters: ntree = 100</li>
+</ul>
+<pre class="r"><code>#Model Random Forest
+require(randomForest)
+load(&quot;models/modelRF2.rda&quot;)
+if(!exists(&quot;modelRF2&quot;)) {
+        modelRF2 &lt;- train(classe ~ ., data = trainingSet2, method=&quot;rf&quot;, do.trace=10, ntree=100)
+        save(modelRF2, file=&quot;models/modelRF2.rda&quot;)
+}
+
+predictedRF2 &lt;- predict(modelRF2, testingSet2)
+cmRF2t &lt;- confusionMatrix(predictedRF2, testingSet2$classe)
+#Consumes a lot of computing time 14:18 - 14:27
+#Accuracy : 0.9954 Kappa : 0.9942
+predictedRF2v &lt;- predict(modelRF2, validation2)
+cmRF2v &lt;- confusionMatrix(predictedRF2v, validation2$classe)
+#Accuracy : 0.9954 Kappa : 0.9942</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Set</th>
+<th align="left">Testing Set</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Accuracy</td>
+<td align="left">99.5411675%</td>
+</tr>
+<tr class="even">
+<td align="left">Accuracy(95%)</td>
+<td align="left">99.2758126, 99.7278469%</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="combined-model-random-forest-from-other-models-predictions-1" class="section level4">
+<h4>Combined model: Random forest from other model’s predictions</h4>
+<ul>
+<li>Parameters: ntree = 100</li>
+</ul>
+<pre class="r"><code>#Model combined
+predCompDF2 &lt;- data.frame(predictedLDA2, predictedGBM2, predictedRF2, classe=testingSet2$classe)
+load(&quot;models/combMod2.rda&quot;)
+if(!exists(&quot;combMod2&quot;)) {
+        combMod2 &lt;- train(classe ~ ., data = predCompDF2, method=&quot;rf&quot;, do.trace=10, ntree=100)
+        save(combMod2, file=&quot;models/combMod2.rda&quot;)
+}
+
+#Time to predict:
+combPred2 &lt;- predict(combMod2, testingSet2)
+cmComb2t &lt;- confusionMatrix(combPred2, testingSet2$classe)
+# Accuracy : 0.9959 Kappa : 0.9948
+validationDataComb &lt;- data.frame(predictedLDA2v, predictedGBM2v, predictedRF2v, y=validation2$classe)
+colnames(validationDataComb) &lt;- colnames(predCompDF2)
+combPred2v &lt;- predict(combMod2, validationDataComb)
+cmComb2v &lt;- confusionMatrix(combPred2v, validationDataComb$classe)
+#Accuracy : 0.9962 Kappa : 0.9952
+
+#Prediction of testingData Set to upload as result
+tpredictedLDA2 &lt;- predict(modelLDA2, testingData)
+tpredictedGBM2 &lt;- predict(modelGBM2, testingData)
+tpredictedRF2 &lt;- predict(modelRF2, testingData)
+
+newdataset2 &lt;- data.frame(tpredictedLDA2, tpredictedGBM2, tpredictedRF2)
+colnames(newdataset2) &lt;- colnames(predCompDF2[,1:3])
+
+tpredictedComb2 &lt;- predict(combMod2, newdata = newdataset2)
+
+result2 &lt;- cbind(seq(1:20), as.character(tpredictedLDA2), as.character(tpredictedGBM2), as.character(tpredictedRF2), as.character(tpredictedComb2))
+
+result</code></pre>
+<pre><code>##      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12] [,13]
+## [1,] &quot;1&quot;  &quot;2&quot;  &quot;3&quot;  &quot;4&quot;  &quot;5&quot;  &quot;6&quot;  &quot;7&quot;  &quot;8&quot;  &quot;9&quot;  &quot;10&quot;  &quot;11&quot;  &quot;12&quot;  &quot;13&quot; 
+## [2,] &quot;B&quot;  &quot;A&quot;  &quot;B&quot;  &quot;C&quot;  &quot;A&quot;  &quot;E&quot;  &quot;D&quot;  &quot;D&quot;  &quot;A&quot;  &quot;A&quot;   &quot;A&quot;   &quot;A&quot;   &quot;B&quot;  
+## [3,] &quot;B&quot;  &quot;A&quot;  &quot;B&quot;  &quot;A&quot;  &quot;A&quot;  &quot;C&quot;  &quot;D&quot;  &quot;B&quot;  &quot;A&quot;  &quot;A&quot;   &quot;A&quot;   &quot;C&quot;   &quot;B&quot;  
+## [4,] &quot;B&quot;  &quot;A&quot;  &quot;B&quot;  &quot;A&quot;  &quot;A&quot;  &quot;E&quot;  &quot;D&quot;  &quot;B&quot;  &quot;A&quot;  &quot;A&quot;   &quot;B&quot;   &quot;C&quot;   &quot;B&quot;  
+## [5,] &quot;B&quot;  &quot;A&quot;  &quot;B&quot;  &quot;A&quot;  &quot;A&quot;  &quot;E&quot;  &quot;D&quot;  &quot;B&quot;  &quot;A&quot;  &quot;A&quot;   &quot;B&quot;   &quot;C&quot;   &quot;B&quot;  
+##      [,14] [,15] [,16] [,17] [,18] [,19] [,20]
+## [1,] &quot;14&quot;  &quot;15&quot;  &quot;16&quot;  &quot;17&quot;  &quot;18&quot;  &quot;19&quot;  &quot;20&quot; 
+## [2,] &quot;A&quot;   &quot;E&quot;   &quot;A&quot;   &quot;C&quot;   &quot;B&quot;   &quot;B&quot;   &quot;B&quot;  
+## [3,] &quot;A&quot;   &quot;E&quot;   &quot;E&quot;   &quot;A&quot;   &quot;B&quot;   &quot;B&quot;   &quot;B&quot;  
+## [4,] &quot;A&quot;   &quot;E&quot;   &quot;E&quot;   &quot;A&quot;   &quot;B&quot;   &quot;B&quot;   &quot;B&quot;  
+## [5,] &quot;A&quot;   &quot;E&quot;   &quot;E&quot;   &quot;A&quot;   &quot;B&quot;   &quot;B&quot;   &quot;B&quot;</code></pre>
+<pre class="r"><code>result2</code></pre>
+<pre><code>##       [,1] [,2] [,3] [,4] [,5]
+##  [1,] &quot;1&quot;  &quot;C&quot;  &quot;B&quot;  &quot;B&quot;  &quot;B&quot; 
+##  [2,] &quot;2&quot;  &quot;A&quot;  &quot;A&quot;  &quot;A&quot;  &quot;A&quot; 
+##  [3,] &quot;3&quot;  &quot;B&quot;  &quot;B&quot;  &quot;B&quot;  &quot;B&quot; 
+##  [4,] &quot;4&quot;  &quot;A&quot;  &quot;A&quot;  &quot;A&quot;  &quot;A&quot; 
+##  [5,] &quot;5&quot;  &quot;A&quot;  &quot;A&quot;  &quot;A&quot;  &quot;A&quot; 
+##  [6,] &quot;6&quot;  &quot;E&quot;  &quot;E&quot;  &quot;E&quot;  &quot;E&quot; 
+##  [7,] &quot;7&quot;  &quot;D&quot;  &quot;D&quot;  &quot;D&quot;  &quot;D&quot; 
+##  [8,] &quot;8&quot;  &quot;D&quot;  &quot;B&quot;  &quot;B&quot;  &quot;B&quot; 
+##  [9,] &quot;9&quot;  &quot;A&quot;  &quot;A&quot;  &quot;A&quot;  &quot;A&quot; 
+## [10,] &quot;10&quot; &quot;A&quot;  &quot;A&quot;  &quot;A&quot;  &quot;A&quot; 
+## [11,] &quot;11&quot; &quot;C&quot;  &quot;B&quot;  &quot;B&quot;  &quot;B&quot; 
+## [12,] &quot;12&quot; &quot;A&quot;  &quot;C&quot;  &quot;C&quot;  &quot;C&quot; 
+## [13,] &quot;13&quot; &quot;E&quot;  &quot;B&quot;  &quot;B&quot;  &quot;B&quot; 
+## [14,] &quot;14&quot; &quot;A&quot;  &quot;A&quot;  &quot;A&quot;  &quot;A&quot; 
+## [15,] &quot;15&quot; &quot;E&quot;  &quot;E&quot;  &quot;E&quot;  &quot;E&quot; 
+## [16,] &quot;16&quot; &quot;A&quot;  &quot;E&quot;  &quot;E&quot;  &quot;E&quot; 
+## [17,] &quot;17&quot; &quot;A&quot;  &quot;A&quot;  &quot;A&quot;  &quot;A&quot; 
+## [18,] &quot;18&quot; &quot;B&quot;  &quot;B&quot;  &quot;B&quot;  &quot;B&quot; 
+## [19,] &quot;19&quot; &quot;B&quot;  &quot;B&quot;  &quot;B&quot;  &quot;B&quot; 
+## [20,] &quot;20&quot; &quot;B&quot;  &quot;B&quot;  &quot;B&quot;  &quot;B&quot;</code></pre>
+<pre class="r"><code>tpredictedComb2</code></pre>
+<pre><code>##  [1] B A B A A E D B A A B C B A E E A B B B
 ## Levels: A B C D E</code></pre>
+<pre class="r"><code>combMod2$finalModel</code></pre>
+<pre><code>## 
+## Call:
+##  randomForest(x = x, y = y, ntree = 100, mtry = param$mtry, do.trace = 10) 
+##                Type of random forest: classification
+##                      Number of trees: 100
+## No. of variables tried at each split: 7
+## 
+##         OOB estimate of  error rate: 0.51%
+## Confusion matrix:
+##      A   B   C   D   E class.error
+## A 1116   0   0   0   0 0.000000000
+## B    0 754   3   1   1 0.006587615
+## C    0   6 678   0   0 0.008771930
+## D    0   0   5 637   1 0.009331260
+## E    0   0   0   3 718 0.004160888</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Set</th>
+<th align="left">Testing Set</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Accuracy</td>
+<td align="left">99.5921489%</td>
+</tr>
+<tr class="even">
+<td align="left">Accuracy(95%)</td>
+<td align="left">99.3385181, 99.7667036%</td>
+</tr>
+</tbody>
+</table>
+<p>Out of sample error is (1-Accuracy) testing &amp; validating set</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Set</th>
+<th align="left">Testing Set</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">OSE</td>
+<td align="left">0.4078511%</td>
+</tr>
+<tr class="even">
+<td align="left">OSE(95%)</td>
+<td align="left">0.6614819, 0.2332964%</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Set</th>
+<th align="left">Validating Set</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">OSE</td>
+<td align="left">0.3823604%</td>
+</tr>
+<tr class="even">
+<td align="left">OSE(95%)</td>
+<td align="left">0.6298624, 0.2141573%</td>
+</tr>
+</tbody>
+</table>
+<p>Validating Set 0.0038236</p>
+<p>Prediction results for this model: B, A, B, A, A, E, D, B, A, A, B, C, B, A, E, E, A, B, B, B</p>
 </div>
-<div id="what-you-should-submit" class="section level2">
-<h2>What you should submit</h2>
-<p>The goal of your project is to predict the manner in which they did the exercise. This is the “classe” variable in the training set. You may use any of the other variables to predict with. You should create a report describing how you built your model, how you used cross validation, what you think the expected out of sample error is, and why you made the choices you did. You will also use your prediction model to predict 20 different test cases.</p>
-<ol style="list-style-type: decimal">
-<li>Your submission should consist of a link to a Github repo with your R markdown and compiled HTML file describing your analysis. Please constrain the text of the writeup to &lt; 2000 words and the number of figures to be less than 5. It will make it easier for the graders if you submit a repo with a gh-pages branch so the HTML page can be viewed online (and you always want to make it easy on graders :-).</li>
-<li>You should also apply your machine learning algorithm to the 20 test cases available in the test data above. Please submit your predictions in appropriate format to the programming assignment for automated grading. See the programming assignment for additional details.</li>
-</ol>
-<p>Reproducibility</p>
-<p>Due to security concerns with the exchange of R code, your code will not be run during the evaluation by your classmates. Please be sure that if they download the repo, they will be able to view the compiled HTML version of your analysis.</p>
+</div>
 </div>
 
 
