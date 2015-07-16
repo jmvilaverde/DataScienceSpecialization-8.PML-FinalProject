@@ -1,13 +1,14 @@
 ---
-title: "Data Science Specialization - 8.PML - Final Project"
-author: "jmvilaverde"
-date: "Monday, July 13, 2015"
+title: "Classification of execution of exercise Unilateral Dumbbell Biceps Curl"
+subtitle: "Data Science Specialization - Practical Machine Learning - Final Project"
+author: "by jmvilaverde"
+date: "Thursday, July 16, 2015"
 output: html_document
 ---
 
 ## Background
 
-Using devices such as Jawbone Up, Nike FuelBand, and Fitbit it is now possible to collect a large amount of data about personal activity relatively inexpensively. These type of devices are part of the quantified self movement – a group of enthusiasts who take measurements about themselves regularly to improve their health, to find patterns in their behavior, or because they are tech geeks. One thing that people regularly do is quantify how much of a particular activity they do, but they rarely quantify how well they do it. In this project, your goal will be to use data from accelerometers on the belt, forearm, arm, and dumbell of 6 participants. They were asked to perform barbell lifts correctly and incorrectly in 5 different ways. 
+Using devices such as Jawbone Up, Nike FuelBand, and Fitbit it is now possible to collect a large amount of data about personal activity relatively inexpensively. One thing that people regularly do is quantify how much of a particular activity they do, but they rarely quantify how well they do it. In this project, our goal will be to use data from accelerometers on the belt, forearm, arm, and dumbell of 6 participants. They were asked to perform barbell lifts correctly and incorrectly in 5 different ways. 
 
 More information is available from the website here: http://groupware.les.inf.puc-rio.br/har (see the section on the Weight Lifting Exercise Dataset). 
 
@@ -22,12 +23,7 @@ More information is available from the website here: http://groupware.les.inf.pu
 * The test data are available here: https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv
 
 _Code 01. Extract files and data._
-
 ```{r extract, echo=TRUE, cache=TRUE}
-########################
-#Extract files and data#
-########################
-
 initValues <- function(){
         
         #Set URL path
@@ -69,7 +65,7 @@ Based on information and data extracted from: (http://groupware.les.inf.puc-rio.
 
 The objective of this data is to define quality of execution.
 
-Six young health participants (`r unique(trainingData$user_name)`)  were asked to perform one set of 10 repetitions of the Unilateral Dumbbell Biceps Curl in five different fashion that was stored into **classe** variable with these 5 types:
+Six young health participants **(`r unique(trainingData$user_name)`)** were asked to perform **one set of 10 repetitions** of the **Unilateral Dumbbell Biceps Curl** in **five different fashion** that was stored into **classe** variable with these 5 types:
 
 Fashion | Classification                         | Type
 ------- | -------------------------------------- | -----------
@@ -81,9 +77,9 @@ E       | throwing the hips to the front         | Mistake
 
 There is a total of **`r ncol(trainingData)-1`** variables as predictors. 
 
-Data collects information from 4 sensors (belt, arm, dumbbell, forearm), each sensor has 3 detectors (acceleration, gyroscope and magnetometer) and each detector has 3 axis **(x, y, z)**, that makes a total of 36 variables. Other sensors predictors are derivated from these predictors.
+Data collects information from **4 sensors (belt, arm, dumbbell, forearm)**, each sensor has **3 detectors (acceleration, gyroscope and magnetometer)** and each detector has **3 axis (x, y, z)**, that makes a total of **36 variables**. Other sensors variables are derivated from these variables.
 
-For our analysis model are selected as relevant sensors predictors these:
+For our analysis model are selected as relevant sensors predictors these variables:
 
 > ##### `r colnames(trainingData[,grep("_x$|_y$|_z$", colnames(trainingData))])`
 
@@ -93,224 +89,32 @@ Other relevant predictors are **new\_window** (indicates start of repetition) an
 
 ***
 
-### Proposal
+### Model: sensors and user name: 39 predictors: X, y and z axis for sensors + user_name + window.
 
-Are proposed two model options based on these premises:
+#### Model Proposal
 
-Included into both models:
+Model is proposed based on these premises:
 
 * It's presumed that sensors are basic to prediction.
 * Because the prediction is about users that participates on training, include user_name as predictor have to improve accuracy.
+* When starts repetition new\_window and which repetition is num\_window is relevant to accuracy of prediction. A model tested without these predictors have lower accuracy than model that includes it (98.01% vs 99.59% over testing set).
 
-Included into final model:
+Model is a combined model Random Forest that is a combination of LDA, GBM and Random Forest model's predictions.
 
-* When starts repetition new\_window and which repetition is num\_window can be relevant to prediction.
-
-***
-
-### Initial Model: sensors and user name: 37 predictors: X, y and z axis for sensors + user_name.
-
-Predictors:
-
-> ##### `r colnames(trainingData[,grep("_x$|_y$|_z$|user", colnames(trainingData))])`
-
-For combined model is used a Random Forest model that is a combination of LDA, Booting and Random Forest model's predictions.
-
-Cross validation: 
-
-* Dataset for training, testing and validanting contains 37 preditors and classe.
-* Separate Training Data into three sets: 60% training set, 20% testing set and 20% validating set.
-* Validation set is used to confirm the results obtained with testing set.
-
-```{r modelSensorsUserDataSet, message=FALSE}
-require(caret)
-require(kernlab)
-require(pROC)
-
-#Based on training data create training sets and test sets
-set.seed(1525)
-
-Dataset <- trainingData[,grep("_x$|_y$|_z$|user|classe", colnames(trainingData))]
-
-inBuild <- createDataPartition(y=Dataset$classe, p=0.8, list=FALSE)
-
-#validation set
-validation <- Dataset[-inBuild,]
-
-buildData <- Dataset[inBuild,]
-
-inTrain <- createDataPartition(y=buildData$classe, p=0.75, list=FALSE)
-
-#training set
-trainingSet <- buildData[inTrain,]
-
-#testing set
-testingSet <- buildData[-inTrain,]
-```
-
-Set             | %     | Sample dimension
---------------- | ----- | -----------------------
-Training        | 60%   | `r dim(trainingSet)[1]`
-Testing         | 20%   | `r dim(testingSet)[1]`
-Validating      | 20%   | `r dim(validation)[1]`
-
-
-#### LDA Model: Linear discriminant analysis
-
-```{r modelLDASensorsUser}
-require(MASS)
-
-load("models/modelLDA.rda")
-if (!exists("modelLDA")) {
-
-        modelLDA <- train(classe ~ ., data = trainingSet, method="lda")
-        save(modelLDA, file="models/modelLDA.rda")
-}
-
-predictedLDA <- predict(modelLDA, testingSet)
-cmLDAt <- confusionMatrix(predictedLDA, testingSet$classe)
-#Accuracy : 0.6628 Kappa : 0.5721
-predictedLDAv <- predict(modelLDA, validation)
-cmLDAv <- confusionMatrix(predictedLDAv, validation$classe)
-#Accuracy : 0.6538 Kappa : 0.5605
-```
-
-Set             | Testing Set
---------------- | ----------------------------------
-Accuracy        | `r ((cmLDAt$overall["Accuracy"])*100)`%
-Accuracy(95%)   | `r ((cmLDAv$overall[c("AccuracyLower", "AccuracyUpper")])*100)`%
-
-
-#### GBM model: Gradient Boosting Machine
-
-```{r modelGBMSensorsUser}
-require(gbm)
-load("models/modelGBM.rda")
-if (!exists("modelGBM")) {
-        modelGBM <- train(classe ~ ., data = trainingSet, method="gbm")
-        save(modelGBM, file="models/modelGBM.rda")
-}
-
-predictedGBM <- predict(modelGBM, testingSet)
-cmGBMt <- confusionMatrix(predictedGBM, testingSet$classe)
-#Consumes a lot of computing time +- 15 minutos
-#Accuracy : 0.9123 Kappa : 0.8889
-predictedGBMv <- predict(modelGBM, validation)
-cmGBMv <- confusionMatrix(predictedGBMv, validation$classe)
-#Accuracy : 0.9039 Kappa : 0.8782
-```
-
-Set             | Testing Set
---------------- | ----------------------------------
-Accuracy        | `r ((cmGBMt$overall["Accuracy"])*100)`%
-Accuracy(95%)   | `r ((cmGBMt$overall[c("AccuracyLower", "AccuracyUpper")])*100)`%
-
-#### RF model: Random Forest.
-
-* Parameters: ntree = 100
-
-```{r modelRFSensorsUser}
-require(randomForest)
-load("models/modelRF.rda")
-if (!exists("modelRF")) {
-        modelRF <- train(classe ~ ., data = trainingSet, method="rf", do.trace=10, ntree=100)
-        save(modelRF, file="models/modelRF.rda")
-}
-
-predictedRF <- predict(modelRF, testingSet)
-cmRFt <- confusionMatrix(predictedRF, testingSet$classe)
-#Consumes a lot of computing time 6 minutes
-#Accuracy : 0.9801 Kappa : 0.9748 Mcnemar's Test P-Value : NA
-predictedRFv <- predict(modelRF, validation)
-cmRFv <- confusionMatrix(predictedRFv, validation$classe)
-# Accuracy : 0.9809 Kappa : 0.9758 Mcnemar's Test P-Value : NA
-``` 
-
-Set             | Testing Set
---------------- | ----------------------------------
-Accuracy        | `r ((cmRFt$overall["Accuracy"])*100)`%
-Accuracy(95%)   | `r ((cmRFt$overall[c("AccuracyLower", "AccuracyUpper")])*100)`%
-
-
-#### Combined model: Random forest from other model's predictions
-
-* Parameters: ntree = 100
-
-```{r modelCombined}
-#Model combined
-predCompDF <- data.frame(predictedLDA, predictedGBM, predictedRF, y=testingSet$classe)
-
-load("models/combMod.rda")
-if (!exists("combMod")) {
-        combMod <- train(y ~ ., data = predCompDF, method="rf", do.trace=10, ntree=100)
-        save("combMod", file="models/combMod.rda")
-}
-
-#Time to predict:
-combPred <- predict(combMod, testingSet)
-cmCombt <- confusionMatrix(combPred, testingSet$classe)
-#Accuracy : 0.9801 Kappa : 0.9748
-combPredv <- predict(combMod, validation)
-cmCombv <- confusionMatrix(combPredv, validation$classe)
-#Accuracy : 0.9801 Kappa : 0.9748
-```
-
-Set             | Testing Set
---------------- | ----------------------------------
-Accuracy        | `r ((cmCombt$overall["Accuracy"])*100)`%
-Accuracy(95%)   | `r ((cmCombt$overall[c("AccuracyLower", "AccuracyUpper")])*100)`%
-
-```{r predictionComb}
-#Prediction of testingData Set to upload as result
-tpredictedLDA <- predict(modelLDA, testingData)
-tpredictedGBM <- predict(modelGBM, testingData)
-tpredictedRF <- predict(modelRF, testingData)
-
-newdataset <- data.frame(tpredictedLDA, tpredictedGBM, tpredictedRF)
-colnames(newdataset) <- colnames(predCompDF[,1:3])
-
-tpredictedComb <- predict(combMod, newdata = newdataset)
-
-result <- rbind(seq(1:20), as.character(tpredictedLDA), as.character(tpredictedGBM), as.character(tpredictedRF), as.character(tpredictedComb))
-
-result
-```
-
-Estimated accuracy for testing set with this predictors:
-
-Model | Accuracy                        | Accuracy 95%
------ | ------------------------------- | ------------------------- 
-LDA   | `r cmLDAt$overall["Accuracy"]`  | `r cmLDAt$overall[c("AccuracyLower", "AccuracyUpper")]`
-GBM   | `r cmGBMt$overall["Accuracy"]`  | `r cmGBMt$overall[c("AccuracyLower", "AccuracyUpper")]`
-RF    | `r cmRFt$overall["Accuracy"]`   | `r cmRFt$overall[c("AccuracyLower", "AccuracyUpper")]`
-Comb  | `r cmCombt$overall["Accuracy"]` | `r cmCombt$overall[c("AccuracyLower", "AccuracyUpper")]`
-
-Prediction for testing set: `r tpredictedComb #B A B A A E D B A A B C B A E E A B B B`
-
-***
-
-### Final Model: sensors and user name: 39 predictors: X, y and z axis for sensors + user_name + window.
-
-Predictors:
-
-> ##### `r colnames(trainingData[,grep("_x$|_y$|_z$|user|window", colnames(trainingData))])`
-
-For combined model is used a Random Forest model that is a combination of LDA, Booting and Random Forest model's predictions.
-
-Cross validation: 
+#### Cross validation 
 
 * Dataset for training, testing and validanting contains 39 preditors and classe.
 * Separate Training Data into three sets: 60% training set, 20% testing set and 20% validating set.
 * Validation set is used to confirm the results obtained with testing set.
 
-```{r modelSensorsUserWindowDataSet}
+_Code 02. Creation of training, testing and validating sets._
+```{r modelSensorsUserWindowDataSet, message=FALSE}
 
-#Based on training data create training sets and test sets
 require(caret)
 require(kernlab)
-require(pROC) #varImp()
+require(pROC)
 
-#Create a model only using x y z axis and user_name, window, classe
+#Seed to be used to obtain the same results
 set.seed(1525)
 
 Dataset2 <- trainingData[,grep("_x$|_y$|_z$|classe|user|window", colnames(trainingData))]
@@ -326,114 +130,148 @@ testingSet2 <- buildData2[-inTrain2,]
 
 ```
 
-Set             | %     | Dimensions
---------------- | ----- | --------------
-Training        | 60%   | `r dim(trainingSet2)`
-Testing         | 20%   | `r dim(testingSet2)`
-Validating      | 20%   | `r dim(validation2)`
+Set             | Training                 | Testing                 | Validating
+--------------- | ------------------------ | ----------------------- | -----------------------
+Dimensions      | `r dim(trainingSet2)[1]` | `r dim(testingSet2)[1]` | `r dim(validation2)[1]`
+%               | 60%                      | 20%                     | 20%
 
 
-#### Use a LDA Model: Linear discriminant analysis
+#### LDA Model: Linear discriminant analysis
 
-```{r modelLDASensorsUserWindow}
-#Model LDA
+_Code 03. LDA Model._
+```{r modelLDASensorsUserWindow, message=FALSE}
 require(MASS)
 
+#Section to load a stored model, to avoid to redo the model
 load("models/modelLDA2.rda")
+
+#If doesn't exists, create and train the model
 if (!exists("modelLDA2")) {
         modelLDA2 <- train(classe ~ ., data = trainingSet2, method="lda")
         save(modelLDA2, file="models/modelLDA2.rda")
 }
 
+#Predict over testing set
 predictedLDA2 <- predict(modelLDA2, testingSet2)
 cmLDA2t <- confusionMatrix(predictedLDA2, testingSet2$classe)
-#Accuracy : 0.6702 Kappa : 0.5815
+
+#Predict over validating set
 predictedLDA2v <- predict(modelLDA2, validation2)
 cmLDA2v <- confusionMatrix(predictedLDA2v, validation2$classe)
-#Accuracy : 0.6643 Kappa : 0.5735  
 ```
 
-Set             | Testing Set
---------------- | ----------------------------------
-Accuracy        | `r ((cmLDA2t$overall["Accuracy"])*100)`%
-Accuracy(95%)   | `r ((cmLDA2t$overall[c("AccuracyLower", "AccuracyUpper")])*100)`%
 
-#### GBM model: Gradient Boosting Machine
 
-```{r modelGBMSensorsUserWindow}
-#Third model GBM
+#### Model GBM: Gradient Boosting Machine
+
+_Code 04. GBM Model._
+```{r modelGBMSensorsUserWindow, message=FALSE}
 require(gbm)
 
+#Section to load a stored model, to avoid to redo the model
 load("models/modelGBM2.rda")
+
+#If doesn't exists, create and train the model
 if (!exists("modelGBM2")) {
         modelGBM2 <- train(classe ~ ., data = trainingSet2, method="gbm")
         save(modelGBM2, file="models/modelGBM2.rda")
 }
 
+#Predict over testing set
 predictedGBM2 <- predict(modelGBM2, testingSet2)
 cmGBM2t <- confusionMatrix(predictedGBM2, testingSet2$classe)
-#Consumes a lot of computing time 13:51 - 14:12
-#Accuracy : 0.9862 Kappa : 0.9826 Mcnemar's Test P-Value : NA
+
+#Predict over validating set
 predictedGBM2v <- predict(modelGBM2, validation2)
 cmGBM2v <- confusionMatrix(predictedGBM2v, validation2$classe)
-# Accuracy : 0.9845 Kappa : 0.9803 Mcnemar's Test P-Value : NA
 ```
-
-Set             | Testing Set
---------------- | ----------------------------------
-Accuracy        | `r ((cmGBM2t$overall["Accuracy"])*100)`%
-Accuracy(95%)   | `r ((cmGBM2t$overall[c("AccuracyLower", "AccuracyUpper")])*100)`%
 
 #### RF model: Random Forest.
 
-* Parameters: ntree = 100
+* Parameters: do.trace=10, ntree = 100
 
-```{r modelRFSensorsUserWindow}
-#Model Random Forest
+_Code 05. RF Model._
+```{r modelRFSensorsUserWindow, message=FALSE}
 require(randomForest)
+
+#Section to load a stored model, to avoid to redo the model
 load("models/modelRF2.rda")
+
+#If doesn't exists, create and train the model
 if(!exists("modelRF2")) {
         modelRF2 <- train(classe ~ ., data = trainingSet2, method="rf", do.trace=10, ntree=100)
         save(modelRF2, file="models/modelRF2.rda")
 }
 
+#Predict over testing set
 predictedRF2 <- predict(modelRF2, testingSet2)
 cmRF2t <- confusionMatrix(predictedRF2, testingSet2$classe)
-#Consumes a lot of computing time 14:18 - 14:27
-#Accuracy : 0.9954 Kappa : 0.9942
+
+#Predict over validating set
 predictedRF2v <- predict(modelRF2, validation2)
 cmRF2v <- confusionMatrix(predictedRF2v, validation2$classe)
-#Accuracy : 0.9954 Kappa : 0.9942
 ```
-
-Set             | Testing Set
---------------- | ----------------------------------
-Accuracy        | `r ((cmRF2t$overall["Accuracy"])*100)`%
-Accuracy(95%)   | `r ((cmRF2t$overall[c("AccuracyLower", "AccuracyUpper")])*100)`%
 
 #### Combined model: Random forest from other model's predictions
 
-* Parameters: ntree = 100
+* Parameters: do.trace=10, ntree = 100
 
-```{r modelCombSensorsUserWindow}
-#Model combined
+_Code 06. Combined Model Random forest._
+```{r modelCombSensorsUserWindow, message=FALSE}
 predCompDF2 <- data.frame(predictedLDA2, predictedGBM2, predictedRF2, classe=testingSet2$classe)
+
+#Section to load a stored model, to avoid to redo the model
 load("models/combMod2.rda")
+
+#If doesn't exists, create and train the model
 if(!exists("combMod2")) {
         combMod2 <- train(classe ~ ., data = predCompDF2, method="rf", do.trace=10, ntree=100)
         save(combMod2, file="models/combMod2.rda")
 }
 
-#Time to predict:
+#Predict over testing set
 combPred2 <- predict(combMod2, testingSet2)
 cmComb2t <- confusionMatrix(combPred2, testingSet2$classe)
-# Accuracy : 0.9959 Kappa : 0.9948
+
+#Predict over validating set
 validationDataComb <- data.frame(predictedLDA2v, predictedGBM2v, predictedRF2v, y=validation2$classe)
 colnames(validationDataComb) <- colnames(predCompDF2)
 combPred2v <- predict(combMod2, validationDataComb)
 cmComb2v <- confusionMatrix(combPred2v, validationDataComb$classe)
-#Accuracy : 0.9962 Kappa : 0.9952
+```
 
+
+_Figure 01. Final combined model_
+```{r finalModel, echo=FALSE} 
+combMod2$finalModel
+```
+
+
+
+_Figure 02. Estimated accuracy for testing set with this predictors._
+
+Model | Accuracy                                         | Accuracy 95%
+----- | ------------------------------------------------ | ------------------------- 
+LDA   | `r round((cmLDA2t$overall["Accuracy"])*100,2)`%  | `r round((cmLDA2t$overall[c("AccuracyLower", "AccuracyUpper")])*100,2)`%
+GBM   | `r round((cmGBM2t$overall["Accuracy"])*100,2)`%  | `r round((cmGBM2t$overall[c("AccuracyLower", "AccuracyUpper")])*100,2)`%
+RF    | `r round((cmRF2t$overall["Accuracy"])*100,2)`%   | `r round((cmRF2t$overall[c("AccuracyLower", "AccuracyUpper")])*100,2)`%
+Combined | `r round((cmComb2t$overall["Accuracy"])*100,2)`% | `r round((cmComb2t$overall[c("AccuracyLower", "AccuracyUpper")])*100,2)`%
+
+
+
+_Figure 03. Final combined model - Out of sample error (OSE) (1-Accuracy) over testing & validating set._
+
+Set        | Out of sample error                                | Out of sample error 95% confidence interval
+---------- | -------------------------------------------------- | --------------------------------------------
+Testing    | `r round((1-cmComb2t$overall["Accuracy"])*100,2)`% | `r round((1-cmComb2t$overall[c("AccuracyLower", "AccuracyUpper")])*100,2)`% 
+Validating | `r round((1-cmComb2v$overall["Accuracy"])*100,2)`% | `r round((1-cmComb2v$overall[c("AccuracyLower", "AccuracyUpper")])*100,2)`%
+
+***
+
+## Prediction to submit
+
+_Code 07. Prediction of classe._
+```{r predictions, message=FALSE}
 #Prediction of testingData Set to upload as result
 tpredictedLDA2 <- predict(modelLDA2, testingData)
 tpredictedGBM2 <- predict(modelGBM2, testingData)
@@ -443,47 +281,6 @@ newdataset2 <- data.frame(tpredictedLDA2, tpredictedGBM2, tpredictedRF2)
 colnames(newdataset2) <- colnames(predCompDF2[,1:3])
 
 tpredictedComb2 <- predict(combMod2, newdata = newdataset2)
-
-result2 <- cbind(seq(1:20), as.character(tpredictedLDA2), as.character(tpredictedGBM2), as.character(tpredictedRF2), as.character(tpredictedComb2))
-
-result
-result2
-tpredictedComb2
-
-combMod2$finalModel
 ```
 
-Set             | Testing Set
---------------- | ----------------------------------
-Accuracy        | `r ((cmComb2t$overall["Accuracy"])*100)`%
-Accuracy(95%)   | `r ((cmComb2t$overall[c("AccuracyLower", "AccuracyUpper")])*100)`%
-
-Out of sample error is (1-Accuracy) testing & validating set
-
-
-Set             | Testing Set
---------------- | ----------------------------------
-OSE             | `r (1-cmComb2t$overall["Accuracy"])*100`%
-OSE(95%)        | `r (1-cmComb2t$overall[c("AccuracyLower", "AccuracyUpper")])*100`%
-
-Set             | Validating Set
---------------- | ----------------------------------
-OSE             | `r (1-cmComb2v$overall["Accuracy"])*100`%
-OSE(95%)        | `r (1-cmComb2v$overall[c("AccuracyLower", "AccuracyUpper")])*100`%
-
-Validating Set `r 1-confusionMatrix(combPred2v, validationDataComb$classe)$overall["Accuracy"]`
-
-Prediction results for this model: `r tpredictedComb2`
-
-```{r filesGeneration, echo=FALSE, eval=FALSE}
-#Code to generate the prediction results files
-pml_write_files = function(x){
-  n = length(x)
-  for(i in 1:n){
-    filename = paste0("prediction/problem_id_",i,".txt")
-    write.table(x[i],file=filename,quote=FALSE,row.names=FALSE,col.names=FALSE)
-  }
-}
-
-pml_write_files(tpredictedComb2)
-```
+> Prediction results for combined model: `r tpredictedComb2`
